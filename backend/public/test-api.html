@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API Manager Operasional</h1>
+    <button onclick="testLogin()">1. Login sebagai Manager</button>
+    <button onclick="testTargets()">2. Get Targets</button>
+    <button onclick="testProgress()">3. Get Progress</button>
+    <pre id="output"></pre>
+
+    <script>
+        let token = '';
+        const output = document.getElementById('output');
+
+        async function testLogin() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: 'hendra.manager@trackingkerja.com',
+                        password: 'password123'
+                    })
+                });
+                const data = await response.json();
+                token = data.token;
+                output.textContent = 'Login success!\nToken: ' + token.substring(0, 50) + '...';
+            } catch (error) {
+                output.textContent = 'Login error: ' + error;
+            }
+        }
+
+        async function testTargets() {
+            if (!token) {
+                output.textContent = 'Please login first!';
+                return;
+            }
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/work-targets', {
+                    headers: {'Authorization': 'Bearer ' + token}
+                });
+                const data = await response.json();
+                output.textContent = 'Targets (' + data.length + '):\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = 'Targets error: ' + error;
+            }
+        }
+
+        async function testProgress() {
+            if (!token) {
+                output.textContent = 'Please login first!';
+                return;
+            }
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/work-progress', {
+                    headers: {'Authorization': 'Bearer ' + token}
+                });
+                const data = await response.json();
+                output.textContent = 'Progress (' + data.length + '):\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = 'Progress error: ' + error;
+            }
+        }
+    </script>
+</body>
+</html>
