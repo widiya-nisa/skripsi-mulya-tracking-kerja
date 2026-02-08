@@ -168,12 +168,8 @@ function MyProgress() {
         />
       )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">Progress Kerja</h2>
-          <p className="text-gray-600">Upload progress dan bukti kerja Anda</p>
-        </div>
+      {/* Upload Button */}
+      <div className="flex justify-end">
         <button
           onClick={() => {
             if (activeTargets.length === 0) {
