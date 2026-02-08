@@ -353,6 +353,30 @@ function Layout({ children }) {
                 Progress Saya
               </Link>
 
+              <Link
+                to="/employee-profile"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/employee-profile")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profil Saya
+              </Link>
+
               {/* Activity Log for Karyawan */}
               <div className="border-t border-blue-800 my-2"></div>
               <Link
@@ -500,6 +524,54 @@ function Layout({ children }) {
                 Pengaturan
               </Link>
 
+              <Link
+                to="/employee-management"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/employee-management")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                Manajemen Karyawan
+              </Link>
+
+              <Link
+                to="/employee-profile"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/employee-profile")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profil Pribadi
+              </Link>
+
               {/* Activity Log for Admin */}
               <div className="border-t border-blue-800 my-2"></div>
               <Link
@@ -605,6 +677,9 @@ function Layout({ children }) {
               {location.pathname === "/team-progress" && "Laporan Tim"}
               {location.pathname === "/my-tasks" && "Target Saya"}
               {location.pathname === "/my-progress" && "Progress Kerja"}
+              {location.pathname === "/employee-profile" && "Profil Pribadi"}
+              {location.pathname === "/employee-management" && "Manajemen Karyawan"}
+              {location.pathname.startsWith("/employee-detail/") && "Detail Karyawan"}
               {location.pathname === "/users" && "User Management"}
               {location.pathname === "/settings" && "Pengaturan Sistem"}
             </h2>

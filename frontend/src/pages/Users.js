@@ -29,6 +29,11 @@ function Users() {
   const [departments, setDepartments] = useState([]); // Dynamic departments list
   const [managers, setManagers] = useState([]); // List of managers
   const currentUser = JSON.parse(localStorage.getItem("user"));
+  
+  // Pagination & Search
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -174,6 +179,21 @@ function Users() {
     return <div className="text-center py-12">Loading...</div>;
   }
 
+  // Filter and search
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.job_description?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
   return (
     <div className="space-y-6">
       {notification && (
@@ -311,154 +331,252 @@ function Users() {
 
       {/* Table Section */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-800">Daftar User</h3>
-          <div className="flex space-x-3">
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
-            >
-              <option value="all">Semua Role</option>
-              <option value="admin">Admin</option>
-              <option value="ceo">CEO / Direktur</option>
-              <option value="manager">Manager</option>
-              <option value="karyawan">Karyawan</option>
-            </select>
-            <button
-              onClick={() => {
-                setEditingUser(null);
-                setFormData({
-                  name: "",
-                  email: "",
-                  password: "",
-                  role: "karyawan",
-                  department: "",
-                  job_description: "",
-                  manager_id: "",
-                });
-                setShowModal(true);
-              }}
-              className="px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition flex items-center"
-            >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Tambah User
-            </button>
-          ) : (
-            <div className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 text-sm">
-              <div className="flex items-center">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Mode View Only - Anda dapat melihat data karyawan
-              </div>
+        {/* Search & Filter */}
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Search */}
+            <div className="flex-1 max-w-md">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Cari nama, email, atau posisi..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f]"
+              />
             </div>
-          )}
+
+            {/* Filter & Add Button */}
+            <div className="flex items-center space-x-3">
+              <select
+                value={filterRole}
+                onChange={(e) => {
+                  setFilterRole(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f]"
+              >
+                <option value="all">Semua Role</option>
+                <option value="admin">Admin</option>
+                <option value="ceo">CEO / Direktur</option>
+                <option value="manager">Manager</option>
+                <option value="karyawan">Karyawan</option>
+              </select>
+              <button
+                onClick={() => {
+                  setEditingUser(null);
+                  setFormData({
+                    name: "",
+                    email: "",
+                    password: "",
+                    role: "karyawan",
+                    department: "",
+                    job_description: "",
+                    manager_id: "",
+                  });
+                  setShowModal(true);
+                }}
+                className="px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition flex items-center whitespace-nowrap"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Tambah User
+              </button>
+            </div>
+          </div>
+
+          {/* Result count */}
+          <div className="mt-3 text-sm text-gray-600">
+            Menampilkan {currentUsers.length} dari {filteredUsers.length} user
           </div>
         </div>
 
+        {/* Table - Compact */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nama
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  User
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Role
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Department
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Department & Posisi
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Terdaftar
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Manager
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
                   Aksi
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-[#001f3f] rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold">
-                          {user.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {user.name}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleBadge(user.role)}`}
-                    >
-                      {getRoleLabel(user.role, user.department)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {user.department ? (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
-                          {user.department}
-                        </span>
-                      ) : (
-                        <span className="text-gray-400 text-xs">-</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(user.created_at).toLocaleDateString("id-ID")}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    {canEdit ? (
-                      <>
-                        <button
-                          onClick={() => handleEdit(user)}
-                          className="text-[#001f3f] hover:text-[#003366]"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Hapus
-                        </button>
-                      </>
-                    ) : (
-                      <span className="text-gray-400 text-xs">View Only</span>
-                    )}
+              {currentUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                    {searchTerm || filterRole !== "all"
+                      ? "Tidak ada user yang sesuai dengan filter"
+                      : "Belum ada user"}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentUsers.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10">
+                          <div className="h-10 w-10 rounded-full bg-[#001f3f] flex items-center justify-center text-white font-bold">
+                            {user.name?.charAt(0).toUpperCase()}
+                          </div>
+                        </div>
+                        <div className="ml-3">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.name}
+                          </div>
+                          <div className="text-xs text-gray-500">{user.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          user.role === "admin"
+                            ? "bg-red-100 text-red-800"
+                            : user.role === "ceo"
+                              ? "bg-purple-100 text-purple-800"
+                              : user.role === "manager"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-green-100 text-green-800"
+                        }`}
+                      >
+                        {user.role === "ceo" ? "CEO" : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      <div>
+                        {user.department && (
+                          <span className="text-xs font-medium text-gray-900">
+                            {user.department.toUpperCase()}
+                          </span>
+                        )}
+                        {user.job_description && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {user.job_description}
+                          </div>
+                        )}
+                        {!user.department && !user.job_description && (
+                          <span className="text-xs text-gray-400">-</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {user.manager?.name || (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-center text-sm space-x-2">
+                      {canEdit && (
+                        <>
+                          <button
+                            onClick={() => handleEdit(user)}
+                            className="text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            Edit
+                          </button>
+                          {user.id !== currentUser?.id && (
+                            <button
+                              onClick={() => handleDelete(user.id)}
+                              className="text-red-600 hover:text-red-800 font-medium"
+                            >
+                              Hapus
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t">
+            <div className="text-sm text-gray-700">
+              Halaman {currentPage} dari {totalPages}
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded text-sm ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-gray-400"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                ← Prev
+              </button>
+              
+              {[...Array(Math.min(totalPages, 5))].map((_, index) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = index + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = index + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + index;
+                } else {
+                  pageNum = currentPage - 2 + index;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`px-3 py-1 rounded text-sm ${
+                      currentPage === pageNum
+                        ? "bg-[#001f3f] text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded text-sm ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-gray-400"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal */}

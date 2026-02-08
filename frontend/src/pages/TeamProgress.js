@@ -12,6 +12,11 @@ function TeamProgress() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [comment, setComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
+  
+  // Pagination & Search
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -165,6 +170,20 @@ function TeamProgress() {
     return <div className="text-center py-12">Loading...</div>;
   }
 
+  // Filter and search
+  const filtered = filteredTargets.filter((target) => {
+    const matchesSearch =
+      target.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      target.assigned_user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
   return (
     <div className="space-y-6">
       {notification && (
@@ -175,185 +194,229 @@ function TeamProgress() {
         />
       )}
 
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-[#001f3f]">Laporan Tim</h1>
-        <p className="text-gray-600 mt-1">
-          Monitor progress kerja dari seluruh anggota tim
-        </p>
-      </div>
+      {/* Filter & Search - Compact */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Search */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Cari Target atau Karyawan
+            </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Ketik untuk mencari..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f]"
+            />
+          </div>
 
-      {/* Filter Tabs */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="flex border-b overflow-x-auto">
-          {["all", "in_progress", "completed", "overdue"].map((status) => (
-            <button
-              key={status}
-              onClick={() => setFilter(status)}
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${
-                filter === status
-                  ? "text-[#001f3f] border-b-2 border-[#001f3f]"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter Status
+            </label>
+            <select
+              value={filter}
+              onChange={(e) => {
+                setFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f]"
             >
-              {status === "all"
-                ? "Semua"
-                : status === "in_progress"
-                  ? "In Progress"
-                  : status === "completed"
-                    ? "Completed"
-                    : "Overdue"}
-            </button>
-          ))}
+              <option value="all">Semua Status</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-3 text-sm text-gray-600">
+          Menampilkan {currentItems.length} dari {filtered.length} target
         </div>
       </div>
+      {/* Targets Table - Compact View */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Target & Karyawan
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Deadline
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Progress
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Update Terakhir
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentItems.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                    {searchTerm || filter !== "all"
+                      ? "Tidak ada target yang sesuai dengan filter"
+                      : "Belum ada target untuk tim Anda"}
+                  </td>
+                </tr>
+              ) : (
+                currentItems.map((target) => {
+                  const targetProgress = getProgressForTarget(target.id);
+                  const latestProgress = targetProgress[0];
 
-      {/* Targets List */}
-      <div className="space-y-4">
-        {filteredTargets.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-500">Tidak ada target dengan status ini</p>
-          </div>
-        ) : (
-          filteredTargets.map((target) => {
-            const targetProgress = getProgressForTarget(target.id);
-
-            return (
-              <div key={target.id} className="bg-white rounded-lg shadow">
-                {/* Target Header */}
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {target.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {target.description}
-                      </p>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                        <span className="flex items-center">
-                          <svg
-                            className="w-4 h-4 mr-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
-                          {target.assigned_user?.name}
-                        </span>
-                        <span>Deadline: {target.deadline}</span>
-                      </div>
-                    </div>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(
-                        target.status,
-                      )}`}
-                    >
-                      {getStatusLabel(target.status)}
-                    </span>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600">Progress:</span>
-                      <span className="text-sm font-bold text-gray-900">
-                        {target.current_percentage || 0}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div
-                        className={`h-3 rounded-full transition-all ${
-                          target.current_percentage === 100
-                            ? "bg-green-500"
-                            : target.current_percentage > 0
-                              ? "bg-blue-500"
-                              : "bg-gray-300"
-                        }`}
-                        style={{ width: `${target.current_percentage || 0}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Progress Updates - Ringkas */}
-                <div className="px-6 py-4">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">
-                    Progress Updates ({targetProgress.length})
-                  </h4>
-                  {targetProgress.length === 0 ? (
-                    <p className="text-sm text-gray-500 italic">
-                      Belum ada progress yang diupload
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {targetProgress.map((prog) => (
-                        <div
-                          key={prog.id}
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  return (
+                    <tr key={target.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        <div className="text-sm font-medium text-gray-900">
+                          {target.title}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          👤 {target.assigned_user?.name}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                        {new Date(target.deadline).toLocaleDateString("id-ID", {
+                          day: "2-digit",
+                          month: "short",
+                        })}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs font-semibold rounded-full ${getStatusBadge(target.status)}`}
                         >
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-gray-600">
-                                {prog.user?.name}
-                              </span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">
-                                {new Date(prog.created_at).toLocaleDateString(
-                                  "id-ID",
-                                  {
-                                    day: "numeric",
-                                    month: "short",
-                                    year: "numeric",
-                                  },
-                                )}
-                              </span>
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">
-                                {prog.percentage}%
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-700 mt-1 line-clamp-1">
-                              {prog.progress_note}
-                            </p>
-                            {prog.comments && prog.comments.length > 0 && (
-                              <div className="flex items-center gap-1 mt-1">
-                                <svg
-                                  className="w-3 h-3 text-green-600"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                                <span className="text-xs text-green-600 font-medium">
-                                  {prog.comments.length} komentar
-                                </span>
-                              </div>
-                            )}
+                          {getStatusLabel(target.status)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${
+                                target.current_percentage === 100
+                                  ? "bg-green-500"
+                                  : target.current_percentage > 0
+                                    ? "bg-blue-500"
+                                    : "bg-gray-300"
+                              }`}
+                              style={{
+                                width: `${target.current_percentage || 0}%`,
+                              }}
+                            ></div>
                           </div>
+                          <span className="text-xs text-gray-700 font-medium">
+                            {target.current_percentage || 0}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        {latestProgress ? (
+                          <>
+                            {new Date(latestProgress.created_at).toLocaleDateString("id-ID", {
+                              day: "2-digit",
+                              month: "short",
+                            })}
+                            <br />
+                            <span className="text-gray-400">
+                              {targetProgress.length} update
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-gray-400">Belum ada</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-center">
+                        {latestProgress && (
                           <button
-                            onClick={() => openDetailModal(prog)}
-                            className="ml-4 px-4 py-2 bg-[#001f3f] text-white text-sm rounded-lg hover:bg-[#003366] transition-colors"
+                            onClick={() => openDetailModal(latestProgress)}
+                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                           >
                             Detail
                           </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t">
+            <div className="text-sm text-gray-700">
+              Halaman {currentPage} dari {totalPages}
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded text-sm ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-gray-400"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                ← Prev
+              </button>
+              
+              {[...Array(Math.min(totalPages, 5))].map((_, index) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = index + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = index + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + index;
+                } else {
+                  pageNum = currentPage - 2 + index;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`px-3 py-1 rounded text-sm ${
+                      currentPage === pageNum
+                        ? "bg-[#001f3f] text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded text-sm ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-gray-400"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         )}
       </div>
 

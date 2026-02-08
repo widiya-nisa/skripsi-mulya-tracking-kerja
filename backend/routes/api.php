@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\MarketingController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\EmployeeProfileController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -72,4 +73,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/customers/stats', [CustomerController::class, 'stats']);
     Route::apiResource('customers', CustomerController::class);
+
+    // Employee Profiles - me route must come before {id} route
+    Route::get('/employee-profiles', [EmployeeProfileController::class, 'index']); // List all (admin/manager)
+    Route::get('/employee-profiles/me', [EmployeeProfileController::class, 'getMyProfile']); // Get own profile
+    Route::post('/employee-profiles', [EmployeeProfileController::class, 'store']); // Create/Update own profile
+    Route::get('/employee-profiles/{id}', [EmployeeProfileController::class, 'show']); // Get specific profile
+    Route::put('/employee-profiles/{id}/admin', [EmployeeProfileController::class, 'adminUpdate']); // Admin update
+    Route::delete('/employee-profiles/{id}', [EmployeeProfileController::class, 'destroy']); // Delete (admin)
 });

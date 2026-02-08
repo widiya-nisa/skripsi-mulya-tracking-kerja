@@ -21,7 +21,7 @@ class WorkTargetController extends Controller
             // Admin, CEO melihat semua target
             if (in_array($user->role, ['admin', 'ceo'])) {
                 $targets = WorkTarget::with(['assignedUser', 'manager', 'latestProgress'])
-                    ->orderBy('deadline', 'asc')
+                    ->orderBy('created_at', 'desc')
                     ->get();
             }
             // Manager melihat:
@@ -36,14 +36,14 @@ class WorkTargetController extends Controller
                         ->orWhereIn('assigned_to', $subordinateIds); // Target untuk karyawannya (dibuat oleh siapapun)
                 })
                     ->with(['assignedUser', 'manager', 'latestProgress'])
-                    ->orderBy('deadline', 'asc')
+                    ->orderBy('created_at', 'desc')
                     ->get();
             }
             // Karyawan melihat target yang di-assign ke mereka
             else {
                 $targets = WorkTarget::where('assigned_to', $user->id)
                     ->with(['manager', 'latestProgress'])
-                    ->orderBy('deadline', 'asc')
+                    ->orderBy('created_at', 'desc')
                     ->get();
             }
 

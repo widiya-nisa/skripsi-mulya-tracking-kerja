@@ -24,7 +24,7 @@ class TaskController extends Controller
             $query->where('status', $request->status);
         }
 
-        $tasks = $query->orderBy('due_date')->get();
+        $tasks = $query->orderBy('created_at', 'desc')->get();
 
         return response()->json($tasks);
     }

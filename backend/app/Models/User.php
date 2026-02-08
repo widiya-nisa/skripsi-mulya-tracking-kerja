@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(WorkProgress::class);
     }
+
+    public function employeeProfile()
+    {
+        return $this->hasOne(EmployeeProfile::class);
+    }
 }

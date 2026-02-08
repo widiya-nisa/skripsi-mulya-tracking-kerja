@@ -17,6 +17,12 @@ function WorkTargets() {
   });
   const user = JSON.parse(localStorage.getItem("user"));
   const [notification, setNotification] = useState(null);
+  
+  // Pagination & Filter
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     fetchTargets();
@@ -158,6 +164,21 @@ function WorkTargets() {
     return <div className="text-center py-12">Loading...</div>;
   }
 
+  // Filter targets
+  const filteredTargets = targets.filter((target) => {
+    const matchesSearch =
+      target.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      target.assigned_user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || target.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTargets = filteredTargets.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredTargets.length / itemsPerPage);
+
   return (
     <div className="space-y-6">
       {notification && (
@@ -169,11 +190,7 @@ function WorkTargets() {
       )}
 
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">Target Tim</h2>
-          <p className="text-gray-600">Kelola target kerja untuk tim Anda</p>
-        </div>
+      <div className="flex justify-between items-center mb-4">
         <button
           onClick={() => {
             setEditingTarget(null);
@@ -205,110 +222,219 @@ function WorkTargets() {
         </button>
       </div>
 
-      {/* Targets List */}
+      {/* Filter & Search */}
+      <div className="bg-white rounded-lg shadow p-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Cari Target atau Karyawan
+            </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Ketik nama target atau karyawan..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
+            />
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
+            >
+              <option value="all">Semua Status</option>
+              <option value="pending">Pending</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Result count */}
+        <div className="mt-3 text-sm text-gray-600">
+          Menampilkan {currentTargets.length} dari {filteredTargets.length} target
+        </div>
+      </div>
+
+      {/* Targets Table - Compact */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Target
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Assigned To
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Deadline
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Progress
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Aksi
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {targets.length === 0 ? (
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
-                  Belum ada target. Klik tombol "Tambah Target" untuk membuat
-                  target baru.
-                </td>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Target & Karyawan
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Deadline
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Progress
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                  Aksi
+                </th>
               </tr>
-            ) : (
-              targets.map((target) => (
-                <tr key={target.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentTargets.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                    {searchTerm || statusFilter !== "all"
+                      ? "Tidak ada target yang sesuai dengan filter"
+                      : "Belum ada target. Klik tombol 'Tambah Target' untuk membuat target baru."}
+                  </td>
+                </tr>
+              ) : (
+                currentTargets.map((target) => (
+                  <tr key={target.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
                       <div className="text-sm font-medium text-gray-900">
                         {target.title}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {target.description?.substring(0, 60)}...
+                      <div className="text-xs text-gray-500 mt-1">
+                        👤 {target.assigned_user?.name} • {target.assigned_user?.job_description}
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {target.assigned_user?.name}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {target.assigned_user?.department}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(target.deadline).toLocaleDateString("id-ID")}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(target.status)}`}
-                    >
-                      {getStatusLabel(target.status)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-full bg-gray-200 rounded-full h-2 mr-2">
-                        <div
-                          className={`h-2 rounded-full ${
-                            target.current_percentage === 100
-                              ? "bg-green-500"
-                              : target.current_percentage > 0
-                                ? "bg-blue-500"
-                                : "bg-gray-300"
-                          }`}
-                          style={{
-                            width: `${target.current_percentage || 0}%`,
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-700">
-                        {target.current_percentage || 0}%
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {new Date(target.deadline).toLocaleDateString("id-ID", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(target.status)}`}
+                      >
+                        {getStatusLabel(target.status)}
                       </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button
-                      onClick={() => handleEdit(target)}
-                      className="text-[#001f3f] hover:text-[#003366]"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(target.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              target.current_percentage === 100
+                                ? "bg-green-500"
+                                : target.current_percentage > 0
+                                  ? "bg-blue-500"
+                                  : "bg-gray-300"
+                            }`}
+                            style={{
+                              width: `${target.current_percentage || 0}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="text-xs text-gray-700 font-medium">
+                          {target.current_percentage || 0}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-center text-sm space-x-2">
+                      <button
+                        onClick={() => handleEdit(target)}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(target.id)}
+                        className="text-red-600 hover:text-red-800 font-medium"
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
+            <div className="text-sm text-gray-700">
+              Halaman {currentPage} dari {totalPages}
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                ← Prev
+              </button>
+              
+              {/* Page numbers */}
+              <div className="flex space-x-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNum = index + 1;
+                  // Show first, last, current, and adjacent pages
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1 rounded ${
+                          currentPage === pageNum
+                            ? "bg-[#001f3f] text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  } else if (
+                    pageNum === currentPage - 2 ||
+                    pageNum === currentPage + 2
+                  ) {
+                    return <span key={pageNum} className="px-2">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-[#001f3f] text-white hover:bg-[#003366]"
+                }`}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal */}

@@ -17,6 +17,9 @@ import WorkTargets from "./pages/WorkTargets";
 import TeamProgress from "./pages/TeamProgress";
 import MyTasks from "./pages/MyTasks";
 import MyProgress from "./pages/MyProgress";
+import EmployeeProfile from "./pages/EmployeeProfile";
+import EmployeeManagement from "./pages/EmployeeManagement";
+import EmployeeDetail from "./pages/EmployeeDetail";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import ActivityLog from "./pages/ActivityLog";
@@ -114,6 +117,36 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <MyProgress />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employee-profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <EmployeeProfile />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employee-management"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <EmployeeManagement />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employee-detail/:id"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <EmployeeDetail />
               </Layout>
             </ProtectedRoute>
           }
