@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\WorkProgress;
 use App\Models\WorkTarget;
 use App\Models\ActivityLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,13 +20,27 @@ class WorkProgressController extends Controller
         try {
             $workTargetId = $request->query('work_target_id');
             $user = $request->user();
-            
-            $query = WorkProgress::with(['user', 'workTarget', 'comments' => function($q) {
+
+            $query = WorkProgress::with(['user', 'workTarget', 'comments' => function ($q) {
                 $q->whereNull('parent_id')->with(['user', 'replies.user']);
             }]);
-            
+
             if ($workTargetId) {
-                // Filter by specific work target
+                // Filter by specific work target with access control
+                $target = WorkTarget::findOrFail($workTargetId);
+                if ($user->role === 'karyawan' && $target->assigned_to !== $user->id) {
+                    return response()->json(['message' => 'Unauthorized'], 403);
+                }
+                if ($user->role === 'manager') {
+                    $subordinateIds = User::where('manager_id', $user->id)
+                        ->pluck('id')
+                        ->toArray();
+                    $subordinateIds[] = $user->id;
+                    if (!in_array($target->assigned_to, $subordinateIds)) {
+                        return response()->json(['message' => 'Unauthorized'], 403);
+                    }
+                }
+
                 $query->where('work_target_id', $workTargetId);
             } else {
                 // Karyawan: show only their own progress
@@ -40,7 +55,7 @@ class WorkProgressController extends Controller
                 }
                 // Admin, Boss, CEO: show all progress (no filter)
             }
-            
+
             $progress = $query->orderBy('created_at', 'desc')->get();
 
             return response()->json($progress);
@@ -69,6 +84,14 @@ class WorkProgressController extends Controller
             'percentage' => $request->percentage,
         ];
 
+        $workTarget = WorkTarget::findOrFail($request->work_target_id);
+        if ($request->user()->role === 'karyawan' && $workTarget->assigned_to !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        if ($request->user()->role === 'manager' && $workTarget->manager_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
@@ -80,7 +103,6 @@ class WorkProgressController extends Controller
         $progress = WorkProgress::create($data);
 
         // Update work target status based on percentage
-        $workTarget = WorkTarget::find($request->work_target_id);
         if ($request->percentage >= 100) {
             $workTarget->status = 'completed';
         } elseif ($request->percentage >= 0) {
@@ -127,7 +149,7 @@ class WorkProgressController extends Controller
         $request->validate([
             'progress_note' => 'sometimes|required|string',
             'percentage' => 'sometimes|required|integer|min:0|max:100',
-            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf|max:10240',
         ]);
 
         $data = $request->only(['progress_note', 'percentage']);
@@ -185,4 +207,3 @@ class WorkProgressController extends Controller
         return response()->json(['message' => 'Progress deleted successfully']);
     }
 }
-

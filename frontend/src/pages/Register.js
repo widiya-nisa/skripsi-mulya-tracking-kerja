@@ -144,7 +144,7 @@ function Register() {
                 <option value="karyawan">Karyawan</option>
                 <option value="manager">Manager IT</option>
                 <option value="admin">Admin</option>
-                <option value="boss">Boss / CEO</option>
+                <option value="ceo">CEO / Direktur</option>
               </select>
               <p className="text-xs text-gray-500 mt-1">
                 Pilih sesuai dengan posisi Anda di perusahaan

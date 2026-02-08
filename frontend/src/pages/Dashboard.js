@@ -37,7 +37,6 @@ function Dashboard() {
   const getRoleDisplay = (role, department) => {
     if (role === "admin") return "Administrator";
     if (role === "ceo") return "Direktur Utama";
-    if (role === "boss") return "Boss / CEO";
     if (role === "manager") {
       if (department === "it") return "Manager IT";
       if (department === "operasional") return "Manager Operasional";
@@ -57,7 +56,7 @@ function Dashboard() {
   const isManager = user?.role === "manager";
   const isDeveloper = user?.role === "karyawan";
   const isAdmin = user?.role === "admin";
-  const isCEO = user?.role === "ceo" || user?.role === "boss";
+  const isCEO = user?.role === "ceo";
 
   if (loading) {
     return (

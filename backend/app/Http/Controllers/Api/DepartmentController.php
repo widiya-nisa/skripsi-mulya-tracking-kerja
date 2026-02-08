@@ -16,15 +16,15 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         $type = $request->query('type'); // Filter by IT or Operasional
-        
+
         $query = Department::query();
-        
+
         if ($type) {
             $query->where('type', $type);
         }
-        
+
         $departments = $query->orderBy('type')->orderBy('name')->get();
-        
+
         return response()->json($departments);
     }
 
@@ -37,7 +37,7 @@ class DepartmentController extends Controller
         if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admin can create departments.'], 403);
         }
-        
+
         $request->validate([
             'name' => 'required|string|max:255|unique:departments,name',
             'description' => 'nullable|string',
@@ -79,9 +79,9 @@ class DepartmentController extends Controller
         if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admin can update departments.'], 403);
         }
-        
+
         $department = Department::findOrFail($id);
-        
+
         $request->validate([
             'name' => 'sometimes|required|string|max:255|unique:departments,name,' . $id,
             'description' => 'nullable|string',
@@ -110,17 +110,19 @@ class DepartmentController extends Controller
         if (request()->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admin can delete departments.'], 403);
         }
-        
+
         $department = Department::findOrFail($id);
-        
+
         // Check if department is used by users
-        $usersCount = User::where('job_description', $department->name)->count();
+        $usersCount = User::where('department', $department->name)
+            ->orWhere('job_description', $department->name)
+            ->count();
         if ($usersCount > 0) {
             return response()->json([
                 'message' => "Cannot delete department. It is currently used by {$usersCount} user(s)."
             ], 422);
         }
-        
+
         $departmentName = $department->name;
         $department->delete();
 

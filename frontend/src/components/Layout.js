@@ -543,7 +543,6 @@ function Layout({ children }) {
                 <p className="text-xs text-blue-200 truncate capitalize">
                   {user?.role === "admin" && "Administrator"}
                   {user?.role === "ceo" && "Direktur Utama"}
-                  {user?.role === "boss" && "Boss / CEO"}
                   {user?.role === "manager" &&
                     user?.department &&
                     (user.department === "it" 

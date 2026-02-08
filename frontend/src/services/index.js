@@ -132,3 +132,87 @@ export const reportService = {
     return response.data;
   },
 };
+
+// Lead services
+export const leadService = {
+  getAll: async (filters = {}) => {
+    const response = await api.get("/leads", { params: filters });
+    return response.data;
+  },
+
+  getStats: async () => {
+    const response = await api.get("/leads/stats");
+    return response.data;
+  },
+
+  create: async (leadData) => {
+    const response = await api.post("/leads", leadData);
+    return response.data;
+  },
+
+  update: async (id, leadData) => {
+    const response = await api.put(`/leads/${id}`, leadData);
+    return response.data;
+  },
+
+  delete: async (id) => {
+    const response = await api.delete(`/leads/${id}`);
+    return response.data;
+  },
+};
+
+// Marketing services
+export const marketingService = {
+  getAll: async (filters = {}) => {
+    const response = await api.get("/marketing", { params: filters });
+    return response.data;
+  },
+
+  getStats: async () => {
+    const response = await api.get("/marketing/stats");
+    return response.data;
+  },
+
+  create: async (campaignData) => {
+    const response = await api.post("/marketing", campaignData);
+    return response.data;
+  },
+
+  update: async (id, campaignData) => {
+    const response = await api.put(`/marketing/${id}`, campaignData);
+    return response.data;
+  },
+
+  delete: async (id) => {
+    const response = await api.delete(`/marketing/${id}`);
+    return response.data;
+  },
+};
+
+// Customer services
+export const customerService = {
+  getAll: async (filters = {}) => {
+    const response = await api.get("/customers", { params: filters });
+    return response.data;
+  },
+
+  getStats: async () => {
+    const response = await api.get("/customers/stats");
+    return response.data;
+  },
+
+  create: async (customerData) => {
+    const response = await api.post("/customers", customerData);
+    return response.data;
+  },
+
+  update: async (id, customerData) => {
+    const response = await api.put(`/customers/${id}`, customerData);
+    return response.data;
+  },
+
+  delete: async (id) => {
+    const response = await api.delete(`/customers/${id}`);
+    return response.data;
+  },
+};

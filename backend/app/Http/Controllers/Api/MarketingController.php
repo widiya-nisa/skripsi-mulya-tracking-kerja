@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Validator;
 
 class MarketingController extends Controller
 {
+    private function ensureWriteAccess(Request $request)
+    {
+        if (!in_array($request->user()->role, ['admin', 'ceo', 'manager'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        return null;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -29,9 +40,9 @@ class MarketingController extends Controller
         // Search
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -48,6 +59,9 @@ class MarketingController extends Controller
      */
     public function store(Request $request)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'type' => 'required|in:social_media,email,webinar,event,ads,content,other',
@@ -107,6 +121,9 @@ class MarketingController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $campaign = MarketingCampaign::find($id);
 
         if (!$campaign) {
@@ -155,6 +172,9 @@ class MarketingController extends Controller
      */
     public function destroy(string $id)
     {
+        if ($response = $this->ensureWriteAccess(request())) {
+            return $response;
+        }
         $campaign = MarketingCampaign::find($id);
 
         if (!$campaign) {
@@ -193,4 +213,3 @@ class MarketingController extends Controller
         ]);
     }
 }
-

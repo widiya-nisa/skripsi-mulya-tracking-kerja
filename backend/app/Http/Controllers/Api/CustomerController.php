@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
+    private function ensureWriteAccess(Request $request)
+    {
+        if (!in_array($request->user()->role, ['admin', 'ceo', 'manager'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        return null;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -34,10 +45,10 @@ class CustomerController extends Controller
         // Search
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('business_name', 'like', "%{$search}%")
-                  ->orWhere('owner_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('owner_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -54,6 +65,9 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $validator = Validator::make($request->all(), [
             'business_name' => 'required|string|max:255',
             'owner_name' => 'required|string|max:255',
@@ -114,6 +128,9 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $customer = Customer::find($id);
 
         if (!$customer) {
@@ -163,6 +180,9 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
+        if ($response = $this->ensureWriteAccess(request())) {
+            return $response;
+        }
         $customer = Customer::find($id);
 
         if (!$customer) {
@@ -201,4 +221,3 @@ class CustomerController extends Controller
         ]);
     }
 }
-

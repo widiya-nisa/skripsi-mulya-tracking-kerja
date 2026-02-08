@@ -41,8 +41,12 @@ class TimeLogController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Verify task exists
-        $task = Task::findOrFail($request->task_id);
+        // Verify task exists and belongs to user's project
+        $task = Task::where('id', $request->task_id)
+            ->whereHas('project', function ($q) use ($request) {
+                $q->where('user_id', $request->user()->id);
+            })
+            ->firstOrFail();
 
         // Calculate duration if end_time provided
         $duration = null;

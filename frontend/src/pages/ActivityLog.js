@@ -102,7 +102,7 @@ function ActivityLog() {
   const getRoleBadgeColor = (role) => {
     const colors = {
       admin: "bg-red-100 text-red-800",
-      boss: "bg-indigo-100 text-indigo-800",
+      ceo: "bg-indigo-100 text-indigo-800",
       manager: "bg-blue-100 text-blue-800",
       karyawan: "bg-green-100 text-green-800",
     };
@@ -122,7 +122,7 @@ function ActivityLog() {
           <p className="text-sm text-gray-600 mt-1">
             {user.role === "karyawan" && "Log aktivitas Anda"}
             {user.role === "manager" && "Log aktivitas tim Anda"}
-            {(user.role === "admin" || user.role === "boss") &&
+            {(user.role === "admin" || user.role === "ceo") &&
               "Log aktivitas semua pengguna"}
           </p>
         </div>

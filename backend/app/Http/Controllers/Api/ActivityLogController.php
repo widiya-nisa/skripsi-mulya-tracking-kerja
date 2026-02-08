@@ -21,13 +21,13 @@ class ActivityLogController extends Controller
         } elseif ($user->role === 'manager') {
             // Manager can see logs from employees they assigned tasks to
             $employeeIds = WorkTarget::where('manager_id', $user->id)
-                ->pluck('user_id')
+                ->pluck('assigned_to')
                 ->unique()
                 ->toArray();
-            
+
             // Include manager's own logs
             $employeeIds[] = $user->id;
-            
+
             $query->whereIn('user_id', $employeeIds);
         }
         // Admin and boss can see all logs (no filter needed)
@@ -68,7 +68,7 @@ class ActivityLogController extends Controller
             $query->where('user_id', $user->id);
         } elseif ($user->role === 'manager') {
             $employeeIds = WorkTarget::where('manager_id', $user->id)
-                ->pluck('user_id')
+                ->pluck('assigned_to')
                 ->unique()
                 ->toArray();
             $employeeIds[] = $user->id;

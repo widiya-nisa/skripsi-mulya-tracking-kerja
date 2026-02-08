@@ -9,6 +9,13 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TimeLogController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\MarketingController;
+use App\Http\Controllers\Api\CustomerController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -46,6 +53,23 @@ Route::middleware('auth:sanctum')->group(function () {
     // Activity Logs - All authenticated users can view based on their role
     Route::get('/activity-logs', [ActivityLogController::class, 'index']);
     Route::get('/activity-logs/stats', [ActivityLogController::class, 'stats']);
+
+    // Projects / Tasks / Time Logs
+    Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('tasks', TaskController::class);
+    Route::apiResource('timelogs', TimeLogController::class);
+
+    // Reports
+    Route::get('/reports/dashboard', [ReportController::class, 'getDashboard']);
+    Route::get('/reports/{period}', [ReportController::class, 'getReport']);
+
+    // Sales & Marketing
+    Route::get('/leads/stats', [LeadController::class, 'stats']);
+    Route::apiResource('leads', LeadController::class);
+
+    Route::get('/marketing/stats', [MarketingController::class, 'stats']);
+    Route::apiResource('marketing', MarketingController::class);
+
+    Route::get('/customers/stats', [CustomerController::class, 'stats']);
+    Route::apiResource('customers', CustomerController::class);
 });
-
-

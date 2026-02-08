@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Validator;
 
 class LeadController extends Controller
 {
+    private function ensureWriteAccess(Request $request)
+    {
+        if (!in_array($request->user()->role, ['admin', 'ceo', 'manager'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        return null;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -29,11 +40,11 @@ class LeadController extends Controller
         // Search
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('business_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('business_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -50,6 +61,9 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'business_name' => 'nullable|string|max:255',
@@ -108,6 +122,9 @@ class LeadController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if ($response = $this->ensureWriteAccess($request)) {
+            return $response;
+        }
         $lead = Lead::find($id);
 
         if (!$lead) {
@@ -155,6 +172,9 @@ class LeadController extends Controller
      */
     public function destroy(string $id)
     {
+        if ($response = $this->ensureWriteAccess(request())) {
+            return $response;
+        }
         $lead = Lead::find($id);
 
         if (!$lead) {
@@ -193,4 +213,3 @@ class LeadController extends Controller
         ]);
     }
 }
-

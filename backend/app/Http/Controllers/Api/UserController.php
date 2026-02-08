@@ -16,15 +16,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        
-        // Admin, boss, ceo bisa lihat semua users
-        if (!in_array($user->role, ['admin', 'boss', 'ceo'])) {
+
+        // Admin dan CEO bisa lihat semua users
+        if (!in_array($user->role, ['admin', 'ceo'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 403);
         }
-        
+
         $query = User::query();
 
         // Filter by role
@@ -35,9 +35,9 @@ class UserController extends Controller
         // Search
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -142,7 +142,7 @@ class UserController extends Controller
         }
 
         $data = $request->only(['name', 'email', 'role', 'department', 'job_description', 'manager_id']);
-        
+
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
