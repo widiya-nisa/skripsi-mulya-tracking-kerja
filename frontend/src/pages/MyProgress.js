@@ -29,6 +29,8 @@ function MyProgress() {
         api.get("/work-targets"),
         api.get("/work-progress"),
       ]);
+      console.log("📊 MyProgress - Targets:", targetsRes.data);
+      console.log("📊 MyProgress - Progress:", progressRes.data);
       setTargets(targetsRes.data);
       setProgress(progressRes.data);
       setLoading(false);
