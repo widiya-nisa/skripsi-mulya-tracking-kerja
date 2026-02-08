@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
 import api from "../services/api";
 import Notification from "../components/Notification";
 
@@ -513,16 +514,18 @@ function Users() {
                         <>
                           <button
                             onClick={() => handleEdit(user)}
-                            className="text-blue-600 hover:text-blue-800 font-medium"
+                            className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition"
+                            title="Edit"
                           >
-                            Edit
+                            <FaEdit className="text-lg" />
                           </button>
                           {user.id !== currentUser?.id && (
                             <button
                               onClick={() => handleDelete(user.id)}
-                              className="text-red-600 hover:text-red-800 font-medium"
+                              className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition"
+                              title="Hapus"
                             >
-                              Hapus
+                              <FaTrash className="text-lg" />
                             </button>
                           )}
                         </>
@@ -765,9 +768,10 @@ function Users() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition"
+                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition flex items-center justify-center gap-2"
                 >
-                  {editingUser ? "Update" : "Tambah"}
+                  <FaSave />
+                  {editingUser ? "Update" : "Simpan"}
                 </button>
                 <button
                   type="button"
@@ -784,8 +788,9 @@ function Users() {
                       manager_id: "",
                     });
                   }}
-                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition flex items-center justify-center gap-2"
                 >
+                  <FaTimes />
                   Batal
                 </button>
               </div>

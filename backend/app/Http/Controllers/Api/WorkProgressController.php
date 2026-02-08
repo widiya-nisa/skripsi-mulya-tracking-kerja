@@ -21,7 +21,7 @@ class WorkProgressController extends Controller
             $workTargetId = $request->query('work_target_id');
             $user = $request->user();
 
-            $query = WorkProgress::with(['user', 'workTarget', 'comments' => function ($q) {
+            $query = WorkProgress::with(['user', 'workTarget', 'attachments.uploader', 'comments' => function ($q) {
                 $q->whereNull('parent_id')->with(['user', 'replies.user']);
             }]);
 

@@ -17,8 +17,8 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        // Admin dan CEO bisa lihat semua users
-        if (!in_array($user->role, ['admin', 'ceo'])) {
+        // Admin, CEO, dan Manager bisa lihat semua users untuk buat grup chat
+        if (!in_array($user->role, ['admin', 'ceo', 'manager'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'

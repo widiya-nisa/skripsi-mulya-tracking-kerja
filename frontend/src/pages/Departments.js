@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
+import Toast from "../components/Toast";
+import { useToast } from "../hooks/useToast";
 
 function Departments() {
   const [departments, setDepartments] = useState([]);
@@ -14,6 +16,7 @@ function Departments() {
     type: "operasional",
   });
   const [filterType, setFilterType] = useState("all");
+  const { toasts, showToast, hideToast } = useToast();
 
   useEffect(() => {
     fetchDepartments();
@@ -35,10 +38,10 @@ function Departments() {
     try {
       if (editingId) {
         await api.put(`/departments/${editingId}`, formData);
-        alert("Department berhasil diupdate!");
+        showToast("Department berhasil diupdate!", "success");
       } else {
         await api.post("/departments", formData);
-        alert("Department berhasil ditambahkan!");
+        showToast("Department berhasil ditambahkan!", "success");
       }
       setShowForm(false);
       setEditingId(null);
@@ -46,9 +49,10 @@ function Departments() {
       fetchDepartments();
     } catch (error) {
       console.error("Error saving department:", error);
-      alert(
+      showToast(
         error.response?.data?.message ||
-          "Gagal menyimpan department. Pastikan nama tidak duplikat."
+          "Gagal menyimpan department. Pastikan nama tidak duplikat.",
+        "error",
       );
     }
   };
@@ -65,19 +69,18 @@ function Departments() {
 
   const handleDelete = async (id, name) => {
     if (
-      window.confirm(
-        `Apakah Anda yakin ingin menghapus department "${name}"?`
-      )
+      window.confirm(`Apakah Anda yakin ingin menghapus department "${name}"?`)
     ) {
       try {
         await api.delete(`/departments/${id}`);
-        alert("Department berhasil dihapus!");
+        showToast("Department berhasil dihapus!", "success");
         fetchDepartments();
       } catch (error) {
         console.error("Error deleting department:", error);
-        alert(
+        showToast(
           error.response?.data?.message ||
-            "Gagal menghapus department. Mungkin masih digunakan oleh karyawan."
+            "Gagal menghapus department. Mungkin masih digunakan oleh karyawan.",
+          "error",
         );
       }
     }
@@ -90,7 +93,7 @@ function Departments() {
 
   const itDepartments = filteredDepartments.filter((d) => d.type === "it");
   const operasionalDepartments = filteredDepartments.filter(
-    (d) => d.type === "operasional"
+    (d) => d.type === "operasional",
   );
 
   if (loading) {
@@ -356,6 +359,16 @@ function Departments() {
           </div>
         )}
       </div>
+      {/* Toast Notifications */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={() => hideToast(toast.id)}
+        />
+      ))}
     </Layout>
   );
 }

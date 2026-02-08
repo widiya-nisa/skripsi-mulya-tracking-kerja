@@ -24,6 +24,8 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import ActivityLog from "./pages/ActivityLog";
 import Departments from "./pages/Departments";
+import Chat from "./pages/Chat";
+import ChatGroups from "./pages/ChatGroups";
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -189,6 +191,26 @@ function App() {
                 <Settings />
               </Layout>
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Chat />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat-groups"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ChatGroups />
+              </Layout>
+            </ProtectedRoute>
           }
         />
 

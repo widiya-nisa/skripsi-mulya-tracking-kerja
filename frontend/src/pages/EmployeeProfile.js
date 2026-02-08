@@ -311,12 +311,27 @@ function EmployeeProfile() {
             <div className="border-b pb-6">
               <h3 className="text-lg font-semibold mb-4">Foto Profil</h3>
               <div className="flex items-center space-x-4">
-                {previewUrls.photo && (
+                {previewUrls.photo ? (
                   <img
                     src={previewUrls.photo}
                     alt="Profile"
                     className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                   />
+                ) : profile?.photo ? (
+                  <img
+                    src={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${profile.photo}`}
+                    alt="Profile"
+                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+                    <span className="text-4xl text-gray-500">
+                      {formData.full_name?.charAt(0) || '?'}
+                    </span>
+                  </div>
                 )}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -803,9 +818,13 @@ function EmployeeProfile() {
                 <div className="flex items-start space-x-6 border-b pb-6">
                   {profile.photo ? (
                     <img
-                      src={`/storage/${profile.photo}`}
+                      src={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${profile.photo}`}
                       alt="Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect fill="%23ddd" width="128" height="128"/><text x="50%" y="50%" font-size="48" text-anchor="middle" dy=".3em" fill="%23999">' + (profile.full_name?.charAt(0) || currentUser?.name?.charAt(0) || '?') + '</text></svg>';
+                      }}
                     />
                   ) : (
                     <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">

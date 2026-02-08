@@ -29,7 +29,9 @@ git push -u origin master
 **Ganti `USERNAME`** dengan username GitHub Anda!
 
 ### Contoh:
+
 Jika username GitHub adalah `johndoe`, maka:
+
 ```bash
 git remote add origin https://github.com/johndoe/tracking-kerja-skripsi.git
 git push -u origin master
@@ -40,6 +42,7 @@ git push -u origin master
 Saat push pertama kali, GitHub akan meminta autentikasi:
 
 ### Option A: Personal Access Token (Recommended)
+
 1. Buka GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
 2. Generate new token (classic)
 3. Pilih scope: `repo` (full control)
@@ -47,6 +50,7 @@ Saat push pertama kali, GitHub akan meminta autentikasi:
 5. Saat diminta password, paste token tersebut
 
 ### Option B: GitHub CLI
+
 ```bash
 # Install GitHub CLI
 winget install GitHub.cli
@@ -77,10 +81,11 @@ git push
 
 ✅ Git repository sudah diinisialisasi
 ✅ 2 commit sudah dibuat:
-   - Initial commit (144 files)
-   - Add README documentation
-✅ Semua file sudah di-track oleh Git
-✅ .gitignore sudah dikonfigurasi
+
+- Initial commit (144 files)
+- Add README documentation
+  ✅ Semua file sudah di-track oleh Git
+  ✅ .gitignore sudah dikonfigurasi
 
 ## 📂 Yang Di-ignore (Tidak akan di-push)
 
@@ -94,6 +99,7 @@ git push
 ## ⚠️ PENTING!
 
 **JANGAN push file `.env`** karena berisi konfigurasi rahasia seperti:
+
 - Database credentials
 - API keys
 - APP_KEY Laravel
@@ -140,23 +146,27 @@ git merge development
 ## 🆘 Troubleshooting
 
 ### Error: "remote origin already exists"
+
 ```bash
 git remote remove origin
 git remote add origin https://github.com/USERNAME/tracking-kerja-skripsi.git
 ```
 
 ### Error: "failed to push some refs"
+
 ```bash
 git pull origin master --allow-unrelated-histories
 git push -u origin master
 ```
 
 ### Lihat remote URL
+
 ```bash
 git remote -v
 ```
 
 ### Ganti remote URL
+
 ```bash
 git remote set-url origin https://github.com/USERNAME/tracking-kerja-skripsi.git
 ```

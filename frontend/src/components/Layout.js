@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authService } from "../services";
+import NotificationBell from "./NotificationBell";
 
 function Layout({ children }) {
   const navigate = useNavigate();
@@ -139,6 +140,54 @@ function Layout({ children }) {
                 Laporan Tim
               </Link>
 
+              <Link
+                to="/employee-profile"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/employee-profile")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profil Pribadi
+              </Link>
+
+              <Link
+                to="/chat"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/chat")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Team Chat
+              </Link>
+
               {/* Activity Log for Manager */}
               <div className="border-t border-blue-800 my-2"></div>
               <Link
@@ -274,6 +323,54 @@ function Layout({ children }) {
                 Department
               </Link>
 
+              <Link
+                to="/employee-profile"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/employee-profile")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profil Pribadi
+              </Link>
+
+              <Link
+                to="/chat"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/chat")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Team Chat
+              </Link>
+
               {/* Activity Log for CEO */}
               <div className="border-t border-blue-800 my-2"></div>
               <Link
@@ -375,6 +472,30 @@ function Layout({ children }) {
                   />
                 </svg>
                 Profil Saya
+              </Link>
+
+              <Link
+                to="/chat"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/chat")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Team Chat
               </Link>
 
               {/* Activity Log for Karyawan */}
@@ -522,6 +643,30 @@ function Layout({ children }) {
                   />
                 </svg>
                 Pengaturan
+              </Link>
+
+              <Link
+                to="/chat"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/chat")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Team Chat
               </Link>
 
               <Link
@@ -682,14 +827,23 @@ function Layout({ children }) {
                 "Detail Karyawan"}
               {location.pathname === "/users" && "User Management"}
               {location.pathname === "/settings" && "Pengaturan Sistem"}
+              {location.pathname === "/chat" && "Team Chat"}
+              {location.pathname === "/chat-groups" && "Grup Chat"}
+              {location.pathname === "/notifications" && "Semua Notifikasi"}
             </h2>
-            <div className="text-sm text-gray-600">
-              {new Date().toLocaleDateString("id-ID", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+            <div className="flex items-center gap-4">
+              {/* Notification Bell */}
+              <NotificationBell />
+
+              {/* Date */}
+              <div className="text-sm text-gray-600">
+                {new Date().toLocaleDateString("id-ID", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
             </div>
           </div>
         </header>

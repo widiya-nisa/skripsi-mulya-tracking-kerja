@@ -5,29 +5,34 @@ Sistem manajemen tracking kerja berbasis web menggunakan **Laravel 12** (Backend
 ## 📋 Fitur Utama
 
 ### 🔐 Role-Based Access Control
+
 - **Admin**: Manajemen penuh sistem, users, dan departments
 - **Manager**: Mengelola target dan progress tim
 - **Karyawan**: Upload progress dan lihat target pribadi
 - **CEO/Boss**: View-only akses ke semua data
 
 ### 💼 Manajemen Department
+
 - Dynamic department management (IT & Operasional)
 - Job description per department
 - Hierarki Manager → Karyawan
 
 ### 🎯 Work Target Management
+
 - Buat dan assign target kerja
 - Priority levels (Low, Medium, High, Urgent)
 - Status tracking (Pending, In Progress, Completed, Overdue)
 - Deadline management
 
 ### 📊 Progress Tracking
+
 - Upload progress dengan percentage
 - Attachment support (gambar & PDF)
 - Comment system dengan replies
 - Real-time progress updates
 
 ### 📈 Dashboard & Reports
+
 - Statistics per role
 - Quick actions berdasarkan role
 - Activity logs (10 items per page)
@@ -36,12 +41,14 @@ Sistem manajemen tracking kerja berbasis web menggunakan **Laravel 12** (Backend
 ## 🛠️ Tech Stack
 
 **Backend:**
+
 - Laravel 12
 - MySQL
 - Laravel Sanctum (Authentication)
 - RESTful API
 
 **Frontend:**
+
 - React 18
 - TailwindCSS
 - React Router DOM
@@ -50,6 +57,7 @@ Sistem manajemen tracking kerja berbasis web menggunakan **Laravel 12** (Backend
 ## 📦 Installation
 
 ### Prerequisites
+
 - PHP >= 8.2
 - Composer
 - Node.js >= 18
@@ -105,14 +113,14 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 
 ## 👥 Default Users
 
-| Role | Email | Password | Department |
-|------|-------|----------|------------|
-| Admin | admin@trackingkerja.com | password123 | - |
-| Manager IT | ahmad.manager@trackingkerja.com | password123 | IT |
-| Manager Operasional | hendra.manager@trackingkerja.com | password123 | Operasional |
-| Karyawan IT | budi@trackingkerja.com | password123 | IT |
-| Karyawan Operasional | rini@trackingkerja.com | password123 | Operasional |
-| CEO/Boss | ceo@trackingkerja.com | password123 | - |
+| Role                 | Email                            | Password    | Department  |
+| -------------------- | -------------------------------- | ----------- | ----------- |
+| Admin                | admin@trackingkerja.com          | password123 | -           |
+| Manager IT           | ahmad.manager@trackingkerja.com  | password123 | IT          |
+| Manager Operasional  | hendra.manager@trackingkerja.com | password123 | Operasional |
+| Karyawan IT          | budi@trackingkerja.com           | password123 | IT          |
+| Karyawan Operasional | rini@trackingkerja.com           | password123 | Operasional |
+| CEO/Boss             | ceo@trackingkerja.com            | password123 | -           |
 
 ## 📁 Project Structure
 
@@ -140,10 +148,12 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 ## 🚀 Usage
 
 1. **Start Backend Server:**
+
    ```bash
    cd backend
    php artisan serve
    ```
+
    Backend akan berjalan di `http://127.0.0.1:8000`
 
 2. **Access Application:**
@@ -154,12 +164,14 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 ## 📖 API Documentation
 
 ### Authentication
+
 - POST `/api/auth/login` - Login
 - POST `/api/auth/register` - Register (admin only)
 - GET `/api/auth/me` - Get current user
 - POST `/api/auth/logout` - Logout
 
 ### Work Targets
+
 - GET `/api/work-targets` - List targets (role-based)
 - POST `/api/work-targets` - Create target
 - GET `/api/work-targets/{id}` - Get target detail
@@ -169,6 +181,7 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 - GET `/api/work-targets/stats` - Get statistics
 
 ### Work Progress
+
 - GET `/api/work-progress` - List progress (role-based)
 - POST `/api/work-progress` - Upload progress
 - GET `/api/work-progress/{id}` - Get progress detail
@@ -176,6 +189,7 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 - DELETE `/api/work-progress/{id}` - Delete progress
 
 ### Departments (Admin Only)
+
 - GET `/api/departments` - List departments
 - POST `/api/departments` - Create department
 - GET `/api/departments/{id}` - Get department detail
@@ -183,6 +197,7 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 - DELETE `/api/departments/{id}` - Delete department
 
 ### Users (Admin Only)
+
 - GET `/api/users` - List users
 - POST `/api/users` - Create user
 - GET `/api/users/{id}` - Get user detail
@@ -191,6 +206,7 @@ Copy-Item -Recurse -Force build\* ..\backend\public\
 - GET `/api/users/stats` - Get user statistics
 
 ### Activity Logs
+
 - GET `/api/activity-logs` - List activity logs
 - GET `/api/activity-logs/stats` - Get log statistics
 

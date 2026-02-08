@@ -17,6 +17,12 @@ use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\MarketingController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\EmployeeProfileController;
+use App\Http\Controllers\Api\ProgressAttachmentController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\LeaveController;
+use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\ChatGroupController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -31,9 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin only routes
     Route::middleware('role:admin')->group(function () {
         Route::get('/users/stats', [UserController::class, 'stats']);
-        Route::apiResource('users', UserController::class);
         Route::apiResource('departments', DepartmentController::class);
     });
+
+    // Users - Admin, CEO, dan Manager bisa akses (untuk buat grup chat)
+    Route::apiResource('users', UserController::class);
 
     // Departments - All authenticated users can view
     Route::get('/departments', [DepartmentController::class, 'index']);
@@ -81,4 +89,54 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/employee-profiles/{id}', [EmployeeProfileController::class, 'show']); // Get specific profile
     Route::put('/employee-profiles/{id}/admin', [EmployeeProfileController::class, 'adminUpdate']); // Admin update
     Route::delete('/employee-profiles/{id}', [EmployeeProfileController::class, 'destroy']); // Delete (admin)
+
+    // Progress Attachments
+    Route::get('/progress/{progressId}/attachments', [ProgressAttachmentController::class, 'index']);
+    Route::post('/progress/{progressId}/attachments', [ProgressAttachmentController::class, 'store']);
+    Route::delete('/progress/{progressId}/attachments/{attachmentId}', [ProgressAttachmentController::class, 'destroy']);
+    Route::get('/progress/{progressId}/attachments/{attachmentId}/download', [ProgressAttachmentController::class, 'download']);
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+
+    // Leaves
+    Route::get('/leaves', [LeaveController::class, 'index']);
+    Route::post('/leaves', [LeaveController::class, 'store']);
+    Route::get('/leaves/stats', [LeaveController::class, 'stats']);
+    Route::put('/leaves/{id}/approve', [LeaveController::class, 'approve']);
+    Route::put('/leaves/{id}/reject', [LeaveController::class, 'reject']);
+    Route::put('/leaves/{id}/cancel', [LeaveController::class, 'cancel']);
+    Route::delete('/leaves/{id}', [LeaveController::class, 'destroy']);
+
+    // Export PDF
+    Route::get('/export/work-targets-pdf', [ExportController::class, 'exportWorkTargetsPDF']);
+    Route::get('/export/work-progress-pdf', [ExportController::class, 'exportProgressPDF']);
+    Route::get('/export/employees-pdf', [ExportController::class, 'exportEmployeesPDF']);
+    Route::get('/export/leaves-pdf', [ExportController::class, 'exportLeavesPDF']);
+
+    // Team Chat (Legacy - keep for backward compatibility)
+    Route::get('/messages/conversations', [MessageController::class, 'getConversations']);
+    Route::get('/messages/unread-count', [MessageController::class, 'getUnreadCount']);
+    Route::get('/messages/team/{team}', [MessageController::class, 'getTeamMessages']);
+    Route::get('/messages/private/{userId}', [MessageController::class, 'getPrivateMessages']);
+    Route::post('/messages/team', [MessageController::class, 'sendTeamMessage']);
+    Route::post('/messages/private', [MessageController::class, 'sendPrivateMessage']);
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+
+    // Chat Groups (New flexible group system)
+    Route::get('/chat-groups', [ChatGroupController::class, 'index']);
+    Route::post('/chat-groups', [ChatGroupController::class, 'store']);
+    Route::get('/chat-groups/{id}', [ChatGroupController::class, 'show']);
+    Route::put('/chat-groups/{id}', [ChatGroupController::class, 'update']);
+    Route::delete('/chat-groups/{id}', [ChatGroupController::class, 'destroy']);
+    Route::get('/chat-groups/{id}/messages', [ChatGroupController::class, 'getMessages']);
+    Route::post('/chat-groups/{id}/messages', [ChatGroupController::class, 'sendMessage']);
+    Route::post('/chat-groups/{id}/members', [ChatGroupController::class, 'addMember']);
+    Route::delete('/chat-groups/{id}/members/{memberId}', [ChatGroupController::class, 'removeMember']);
+    Route::get('/chat-groups/{id}/available-users', [ChatGroupController::class, 'getAvailableUsers']);
 });
+

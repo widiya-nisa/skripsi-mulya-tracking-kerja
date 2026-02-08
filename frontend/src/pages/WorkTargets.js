@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
 import api from "../services/api";
 import Notification from "../components/Notification";
 
@@ -211,19 +212,7 @@ function WorkTargets() {
           }}
           className="px-6 py-3 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition flex items-center space-x-2"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <FaPlus className="text-lg" />
           <span>Tambah Target</span>
         </button>
       </div>
@@ -362,15 +351,17 @@ function WorkTargets() {
                     <td className="px-4 py-3 whitespace-nowrap text-center text-sm space-x-2">
                       <button
                         onClick={() => handleEdit(target)}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition"
+                        title="Edit"
                       >
-                        Edit
+                        <FaEdit className="text-lg" />
                       </button>
                       <button
                         onClick={() => handleDelete(target.id)}
-                        className="text-red-600 hover:text-red-800 font-medium"
+                        className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition"
+                        title="Hapus"
                       >
-                        Hapus
+                        <FaTrash className="text-lg" />
                       </button>
                     </td>
                   </tr>
@@ -592,9 +583,10 @@ function WorkTargets() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition cursor-pointer"
+                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition cursor-pointer flex items-center justify-center gap-2"
                 >
-                  {editingTarget ? "Update" : "Tambah"}
+                  <FaSave />
+                  {editingTarget ? "Update" : "Simpan"}
                 </button>
                 <button
                   type="button"
@@ -609,8 +601,9 @@ function WorkTargets() {
                       deadline: "",
                     });
                   }}
-                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition cursor-pointer"
+                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition cursor-pointer flex items-center justify-center gap-2"
                 >
+                  <FaTimes />
                   Batal
                 </button>
               </div>

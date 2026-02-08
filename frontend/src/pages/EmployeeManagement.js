@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import api from "../services/api";
 import Notification from "../components/Notification";
 
@@ -14,6 +15,17 @@ function EmployeeManagement() {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [formData, setFormData] = useState({
+    user_id: "",
+    full_name: "",
+    nik: "",
+    phone: "",
+    position: "",
+    employment_status: "permanent",
+    join_date: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -53,6 +65,35 @@ function EmployeeManagement() {
         error.response?.data?.message || "Gagal menghapus profil",
         "error",
       );
+    }
+  };
+
+  const handleAddEmployee = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      await api.post("/employee-profiles", formData);
+      showNotification("Profil karyawan berhasil ditambahkan", "success");
+      setShowAddModal(false);
+      setFormData({
+        user_id: "",
+        full_name: "",
+        nik: "",
+        phone: "",
+        position: "",
+        employment_status: "permanent",
+        join_date: "",
+      });
+      fetchData();
+    } catch (error) {
+      console.error("Error adding employee:", error);
+      showNotification(
+        error.response?.data?.message || "Gagal menambah karyawan",
+        "error",
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -116,11 +157,20 @@ function EmployeeManagement() {
               Kelola data profil seluruh karyawan
             </p>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-blue-600">
-              {employees.length}
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-3xl font-bold text-blue-600">
+                {employees.length}
+              </div>
+              <div className="text-sm text-gray-600">Total Karyawan</div>
             </div>
-            <div className="text-sm text-gray-600">Total Karyawan</div>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              <FaPlus />
+              <span>Tambah Karyawan</span>
+            </button>
           </div>
         </div>
       </div>
@@ -409,6 +459,167 @@ function EmployeeManagement() {
           </div>
         )}
       </div>
+
+      {/* Add Employee Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-gray-800">
+                Tambah Karyawan Baru
+              </h3>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddEmployee} className="p-6 space-y-4">
+              {/* User Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Pilih User <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={formData.user_id}
+                  onChange={(e) =>
+                    setFormData({ ...formData, user_id: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">-- Pilih User --</option>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name} ({user.email}) - {user.role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Full Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nama Lengkap <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.full_name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, full_name: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+
+              {/* NIK */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  NIK / Employee ID
+                </label>
+                <input
+                  type="text"
+                  value={formData.nik}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nik: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  No. Telepon
+                </label>
+                <input
+                  type="text"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Position */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Posisi / Jabatan
+                </label>
+                <input
+                  type="text"
+                  value={formData.position}
+                  onChange={(e) =>
+                    setFormData({ ...formData, position: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Employment Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status Kepegawaian
+                </label>
+                <select
+                  value={formData.employment_status}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      employment_status: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="permanent">Tetap</option>
+                  <option value="contract">Kontrak</option>
+                  <option value="probation">Probation</option>
+                  <option value="internship">Magang</option>
+                </select>
+              </div>
+
+              {/* Join Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tanggal Bergabung
+                </label>
+                <input
+                  type="date"
+                  value={formData.join_date}
+                  onChange={(e) =>
+                    setFormData({ ...formData, join_date: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex items-center gap-2 px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  <FaTimes />
+                  <span>Batal</span>
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                  <FaSave />
+                  <span>{submitting ? "Menyimpan..." : "Simpan"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

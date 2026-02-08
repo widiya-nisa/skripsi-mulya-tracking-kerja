@@ -36,4 +36,9 @@ class WorkProgress extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(ProgressAttachment::class);
+    }
 }

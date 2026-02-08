@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaEye, FaTimes, FaPaperPlane } from "react-icons/fa";
 import api from "../services/api";
 import Notification from "../components/Notification";
 
@@ -351,9 +352,10 @@ function TeamProgress() {
                         {latestProgress && (
                           <button
                             onClick={() => openDetailModal(latestProgress)}
-                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                            className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition"
+                            title="Detail"
                           >
-                            Detail
+                            <FaEye className="text-lg" />
                           </button>
                         )}
                       </td>
@@ -745,16 +747,18 @@ function TeamProgress() {
                     <button
                       type="button"
                       onClick={closeDetailModal}
-                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
                       disabled={submittingComment}
                     >
+                      <FaTimes />
                       Tutup
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                       disabled={!comment.trim() || submittingComment}
                     >
+                      <FaPaperPlane />
                       {submittingComment ? "Mengirim..." : "Kirim Komentar"}
                     </button>
                   </div>

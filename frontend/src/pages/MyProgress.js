@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaUpload, FaTimes } from "react-icons/fa";
 import api from "../services/api";
 import Notification from "../components/Notification";
 
@@ -239,8 +240,9 @@ function MyProgress() {
                           });
                           setShowModal(true);
                         }}
-                        className="bg-white text-[#001f3f] px-4 py-2 rounded-lg hover:bg-blue-50 transition text-sm font-medium"
+                        className="bg-white text-[#001f3f] px-4 py-2 rounded-lg hover:bg-blue-50 transition text-sm font-medium flex items-center gap-2"
                       >
+                        <FaUpload />
                         Upload Progress
                       </button>
                     )}
@@ -602,8 +604,9 @@ function MyProgress() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition"
+                  className="flex-1 bg-[#001f3f] text-white px-4 py-2 rounded-lg hover:bg-[#003366] transition flex items-center justify-center gap-2"
                 >
+                  <FaUpload />
                   Upload Progress
                 </button>
                 <button
@@ -618,8 +621,9 @@ function MyProgress() {
                     });
                     setSelectedTarget(null);
                   }}
-                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition flex items-center justify-center gap-2"
                 >
+                  <FaTimes />
                   Batal
                 </button>
               </div>
