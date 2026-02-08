@@ -29,7 +29,7 @@ function Users() {
   const [departments, setDepartments] = useState([]); // Dynamic departments list
   const [managers, setManagers] = useState([]); // List of managers
   const currentUser = JSON.parse(localStorage.getItem("user"));
-  
+
   // Pagination & Search
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -90,10 +90,16 @@ function Users() {
     try {
       if (editingUser) {
         await api.put(`/users/${editingUser.id}`, formData);
-        setNotification({ message: 'User berhasil diupdate!', type: 'success' });
+        setNotification({
+          message: "User berhasil diupdate!",
+          type: "success",
+        });
       } else {
         await api.post("/users", formData);
-        setNotification({ message: 'User berhasil ditambahkan!', type: 'success' });
+        setNotification({
+          message: "User berhasil ditambahkan!",
+          type: "success",
+        });
       }
       setShowModal(false);
       setFormData({
@@ -109,9 +115,11 @@ function Users() {
       fetchUsers();
       fetchStats();
     } catch (error) {
-      setNotification({ 
-        message: error.response?.data?.message || "Terjadi kesalahan saat menyimpan data", 
-        type: 'error' 
+      setNotification({
+        message:
+          error.response?.data?.message ||
+          "Terjadi kesalahan saat menyimpan data",
+        type: "error",
       });
     }
   };
@@ -134,13 +142,13 @@ function Users() {
     if (window.confirm("Yakin ingin menghapus user ini?")) {
       try {
         await api.delete(`/users/${id}`);
-        setNotification({ message: 'User berhasil dihapus!', type: 'success' });
+        setNotification({ message: "User berhasil dihapus!", type: "success" });
         fetchUsers();
         fetchStats();
       } catch (error) {
-        setNotification({ 
-          message: error.response?.data?.message || "Gagal menghapus user", 
-          type: 'error' 
+        setNotification({
+          message: error.response?.data?.message || "Gagal menghapus user",
+          type: "error",
         });
       }
     }
@@ -157,20 +165,20 @@ function Users() {
   };
 
   const getRoleLabel = (role, department) => {
-    if (role === 'admin') return 'Administrator';
-    if (role === 'ceo') return 'CEO / Direktur';
-    if (role === 'manager') {
-      if (department === 'it') return 'Manager IT';
-      if (department === 'operasional') return 'Manager Operasional';
-      return 'Manager';
+    if (role === "admin") return "Administrator";
+    if (role === "ceo") return "CEO / Direktur";
+    if (role === "manager") {
+      if (department === "it") return "Manager IT";
+      if (department === "operasional") return "Manager Operasional";
+      return "Manager";
     }
-    if (role === 'karyawan') {
-      if (department === 'frontend') return 'Frontend Developer';
-      if (department === 'backend') return 'Backend Developer';
-      if (department === 'mobile') return 'Mobile Developer';
-      if (department === 'business_analyst') return 'Business Analyst';
-      if (department === 'pemasaran') return 'Staff Pemasaran';
-      return 'Karyawan';
+    if (role === "karyawan") {
+      if (department === "frontend") return "Frontend Developer";
+      if (department === "backend") return "Backend Developer";
+      if (department === "mobile") return "Mobile Developer";
+      if (department === "business_analyst") return "Business Analyst";
+      if (department === "pemasaran") return "Staff Pemasaran";
+      return "Karyawan";
     }
     return role;
   };
@@ -273,7 +281,9 @@ function Users() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Manager</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.manager}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.manager}
+              </p>
             </div>
           </div>
         </div>
@@ -429,7 +439,10 @@ function Users() {
             <tbody className="bg-white divide-y divide-gray-200">
               {currentUsers.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan="5"
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     {searchTerm || filterRole !== "all"
                       ? "Tidak ada user yang sesuai dengan filter"
                       : "Belum ada user"}
@@ -449,7 +462,9 @@ function Users() {
                           <div className="text-sm font-medium text-gray-900">
                             {user.name}
                           </div>
-                          <div className="text-xs text-gray-500">{user.email}</div>
+                          <div className="text-xs text-gray-500">
+                            {user.email}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -465,7 +480,10 @@ function Users() {
                                 : "bg-green-100 text-green-800"
                         }`}
                       >
-                        {user.role === "ceo" ? "CEO" : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                        {user.role === "ceo"
+                          ? "CEO"
+                          : user.role.charAt(0).toUpperCase() +
+                            user.role.slice(1)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
@@ -535,7 +553,7 @@ function Users() {
               >
                 ← Prev
               </button>
-              
+
               {[...Array(Math.min(totalPages, 5))].map((_, index) => {
                 let pageNum;
                 if (totalPages <= 5) {
@@ -564,7 +582,9 @@ function Users() {
               })}
 
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1 rounded text-sm ${
                   currentPage === totalPages
@@ -648,9 +668,10 @@ function Users() {
                   <option value="admin">Administrator</option>
                 </select>
               </div>
-              
+
               {/* Department - Only for Manager and Karyawan */}
-              {(formData.role === 'manager' || formData.role === 'karyawan') && (
+              {(formData.role === "manager" ||
+                formData.role === "karyawan") && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Department <span className="text-red-500">*</span>
@@ -659,11 +680,11 @@ function Users() {
                     value={formData.department}
                     onChange={(e) => {
                       const newDept = e.target.value;
-                      setFormData({ 
-                        ...formData, 
+                      setFormData({
+                        ...formData,
                         department: newDept,
                         job_description: "", // Reset job description when department changes
-                        manager_id: "" // Reset manager when department changes
+                        manager_id: "", // Reset manager when department changes
                       });
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
@@ -675,10 +696,11 @@ function Users() {
                   </select>
                 </div>
               )}
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Job Description / Posisi <span className="text-red-500">*</span>
+                  Job Description / Posisi{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={formData.job_description || ""}
@@ -697,7 +719,8 @@ function Users() {
                       .filter((d) => d.type === "it")
                       .map((dept) => (
                         <option key={dept.id} value={dept.name}>
-                          {dept.name} {dept.description && `- ${dept.description}`}
+                          {dept.name}{" "}
+                          {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
                   {formData.department === "operasional" &&
@@ -705,7 +728,8 @@ function Users() {
                       .filter((d) => d.type === "operasional")
                       .map((dept) => (
                         <option key={dept.id} value={dept.name}>
-                          {dept.name} {dept.description && `- ${dept.description}`}
+                          {dept.name}{" "}
+                          {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
                 </select>
@@ -730,7 +754,9 @@ function Users() {
                       .filter((m) => m.department === formData.department)
                       .map((manager) => (
                         <option key={manager.id} value={manager.id}>
-                          {manager.name} - {manager.department && `Manager ${manager.department.toUpperCase()}`}
+                          {manager.name} -{" "}
+                          {manager.department &&
+                            `Manager ${manager.department.toUpperCase()}`}
                         </option>
                       ))}
                   </select>

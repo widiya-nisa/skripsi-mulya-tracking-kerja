@@ -12,7 +12,7 @@ function TeamProgress() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [comment, setComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
-  
+
   // Pagination & Search
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -29,10 +29,10 @@ function TeamProgress() {
         api.get("/work-targets"),
         api.get("/work-progress"),
       ]);
-      
+
       console.log("Targets response:", targetsRes.data);
       console.log("Progress response:", progressRes.data);
-      
+
       setTargets(targetsRes.data);
       setProgress(progressRes.data);
       setLoading(false);
@@ -174,7 +174,9 @@ function TeamProgress() {
   const filtered = filteredTargets.filter((target) => {
     const matchesSearch =
       target.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      target.assigned_user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      target.assigned_user?.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
 
@@ -269,7 +271,10 @@ function TeamProgress() {
             <tbody className="bg-white divide-y divide-gray-200">
               {currentItems.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan="6"
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     {searchTerm || filter !== "all"
                       ? "Tidak ada target yang sesuai dengan filter"
                       : "Belum ada target untuk tim Anda"}
@@ -327,7 +332,9 @@ function TeamProgress() {
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                         {latestProgress ? (
                           <>
-                            {new Date(latestProgress.created_at).toLocaleDateString("id-ID", {
+                            {new Date(
+                              latestProgress.created_at,
+                            ).toLocaleDateString("id-ID", {
                               day: "2-digit",
                               month: "short",
                             })}
@@ -376,7 +383,7 @@ function TeamProgress() {
               >
                 ← Prev
               </button>
-              
+
               {[...Array(Math.min(totalPages, 5))].map((_, index) => {
                 let pageNum;
                 if (totalPages <= 5) {
@@ -405,7 +412,9 @@ function TeamProgress() {
               })}
 
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1 rounded text-sm ${
                   currentPage === totalPages

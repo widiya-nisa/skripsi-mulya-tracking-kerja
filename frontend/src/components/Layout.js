@@ -617,14 +617,12 @@ function Layout({ children }) {
                   {user?.role === "ceo" && "Direktur Utama"}
                   {user?.role === "manager" &&
                     user?.department &&
-                    (user.department === "it" 
-                      ? "Manager IT" 
+                    (user.department === "it"
+                      ? "Manager IT"
                       : user.department === "operasional"
                         ? "Manager Operasional"
                         : `Manager ${user.department.charAt(0).toUpperCase() + user.department.slice(1)}`)}
-                  {user?.role === "manager" &&
-                    !user?.department &&
-                    "Manager"}
+                  {user?.role === "manager" && !user?.department && "Manager"}
                   {user?.role === "karyawan" &&
                     user?.department &&
                     (user.department === "frontend"
@@ -678,8 +676,10 @@ function Layout({ children }) {
               {location.pathname === "/my-tasks" && "Target Saya"}
               {location.pathname === "/my-progress" && "Progress Kerja"}
               {location.pathname === "/employee-profile" && "Profil Pribadi"}
-              {location.pathname === "/employee-management" && "Manajemen Karyawan"}
-              {location.pathname.startsWith("/employee-detail/") && "Detail Karyawan"}
+              {location.pathname === "/employee-management" &&
+                "Manajemen Karyawan"}
+              {location.pathname.startsWith("/employee-detail/") &&
+                "Detail Karyawan"}
               {location.pathname === "/users" && "User Management"}
               {location.pathname === "/settings" && "Pengaturan Sistem"}
             </h2>

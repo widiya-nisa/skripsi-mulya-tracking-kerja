@@ -17,7 +17,7 @@ function WorkTargets() {
   });
   const user = JSON.parse(localStorage.getItem("user"));
   const [notification, setNotification] = useState(null);
-  
+
   // Pagination & Filter
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -168,15 +168,21 @@ function WorkTargets() {
   const filteredTargets = targets.filter((target) => {
     const matchesSearch =
       target.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      target.assigned_user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || target.status === statusFilter;
+      target.assigned_user?.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || target.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTargets = filteredTargets.slice(indexOfFirstItem, indexOfLastItem);
+  const currentTargets = filteredTargets.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
   const totalPages = Math.ceil(filteredTargets.length / itemsPerPage);
 
   return (
@@ -266,7 +272,8 @@ function WorkTargets() {
 
         {/* Result count */}
         <div className="mt-3 text-sm text-gray-600">
-          Menampilkan {currentTargets.length} dari {filteredTargets.length} target
+          Menampilkan {currentTargets.length} dari {filteredTargets.length}{" "}
+          target
         </div>
       </div>
 
@@ -296,7 +303,10 @@ function WorkTargets() {
             <tbody className="bg-white divide-y divide-gray-200">
               {currentTargets.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan="5"
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     {searchTerm || statusFilter !== "all"
                       ? "Tidak ada target yang sesuai dengan filter"
                       : "Belum ada target. Klik tombol 'Tambah Target' untuk membuat target baru."}
@@ -310,7 +320,8 @@ function WorkTargets() {
                         {target.title}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
-                        👤 {target.assigned_user?.name} • {target.assigned_user?.job_description}
+                        👤 {target.assigned_user?.name} •{" "}
+                        {target.assigned_user?.job_description}
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
@@ -387,7 +398,7 @@ function WorkTargets() {
               >
                 ← Prev
               </button>
-              
+
               {/* Page numbers */}
               <div className="flex space-x-1">
                 {[...Array(totalPages)].map((_, index) => {
@@ -415,14 +426,20 @@ function WorkTargets() {
                     pageNum === currentPage - 2 ||
                     pageNum === currentPage + 2
                   ) {
-                    return <span key={pageNum} className="px-2">...</span>;
+                    return (
+                      <span key={pageNum} className="px-2">
+                        ...
+                      </span>
+                    );
                   }
                   return null;
                 })}
               </div>
 
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1 rounded ${
                   currentPage === totalPages
@@ -488,12 +505,13 @@ function WorkTargets() {
                   required
                 >
                   <option value="">Pilih Karyawan</option>
-                  
+
                   {/* Group by department */}
-                  {subordinates.filter(s => s.department === 'it').length > 0 && (
+                  {subordinates.filter((s) => s.department === "it").length >
+                    0 && (
                     <optgroup label="── IT Department ──">
                       {subordinates
-                        .filter(s => s.department === 'it')
+                        .filter((s) => s.department === "it")
                         .map((sub) => (
                           <option key={sub.id} value={sub.id}>
                             {sub.name} - {sub.job_description || sub.role}
@@ -501,11 +519,12 @@ function WorkTargets() {
                         ))}
                     </optgroup>
                   )}
-                  
-                  {subordinates.filter(s => s.department === 'operasional').length > 0 && (
+
+                  {subordinates.filter((s) => s.department === "operasional")
+                    .length > 0 && (
                     <optgroup label="── Operasional Department ──">
                       {subordinates
-                        .filter(s => s.department === 'operasional')
+                        .filter((s) => s.department === "operasional")
                         .map((sub) => (
                           <option key={sub.id} value={sub.id}>
                             {sub.name} - {sub.job_description || sub.role}
@@ -513,15 +532,25 @@ function WorkTargets() {
                         ))}
                     </optgroup>
                   )}
-                  
+
                   {/* Others without department */}
-                  {subordinates.filter(s => !s.department || (s.department !== 'it' && s.department !== 'operasional')).length > 0 && (
+                  {subordinates.filter(
+                    (s) =>
+                      !s.department ||
+                      (s.department !== "it" && s.department !== "operasional"),
+                  ).length > 0 && (
                     <optgroup label="── Lainnya ──">
                       {subordinates
-                        .filter(s => !s.department || (s.department !== 'it' && s.department !== 'operasional'))
+                        .filter(
+                          (s) =>
+                            !s.department ||
+                            (s.department !== "it" &&
+                              s.department !== "operasional"),
+                        )
                         .map((sub) => (
                           <option key={sub.id} value={sub.id}>
-                            {sub.name} {sub.department && `- ${sub.department}`} {sub.job_description && `(${sub.job_description})`}
+                            {sub.name} {sub.department && `- ${sub.department}`}{" "}
+                            {sub.job_description && `(${sub.job_description})`}
                           </option>
                         ))}
                     </optgroup>
