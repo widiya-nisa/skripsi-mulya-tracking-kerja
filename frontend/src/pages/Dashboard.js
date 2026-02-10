@@ -76,14 +76,14 @@ function Dashboard() {
         />
       )}
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-[#001f3f] to-[#003366] text-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">
+      <div className="bg-gradient-to-r from-[#001f3f] to-[#003366] text-white p-4 md:p-6 rounded-lg shadow-lg">
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">
           Selamat Datang, {user?.name}!
         </h1>
-        <p className="text-blue-100">
+        <p className="text-sm md:text-base text-blue-100">
           Sistem Tracking Kerja - Management Perusahaan
         </p>
-        <p className="text-sm text-blue-200 mt-1">
+        <p className="text-xs md:text-sm text-blue-200 mt-1">
           Role:{" "}
           <span className="font-semibold">
             {getRoleDisplay(user?.role, user?.department)}
@@ -93,7 +93,7 @@ function Dashboard() {
 
       {/* Stats Overview */}
       <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">
+        <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
           📊{" "}
           {isAdmin || isCEO
             ? "Statistik Target Kerja"
@@ -101,24 +101,24 @@ function Dashboard() {
               ? "Statistik Tim"
               : "Statistik Target Kerja"}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
           {/* Total */}
           <Link
             to={isManager ? "/work-targets" : "/my-tasks"}
-            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-blue-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="mb-2 md:mb-0">
+                <p className="text-xs md:text-sm font-medium text-gray-500">
                   Total Target
                 </p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-2xl md:text-3xl font-bold text-gray-900">
                   {stats.total}
                 </p>
               </div>
-              <div className="bg-blue-100 rounded-full p-3">
+              <div className="bg-blue-100 rounded-full p-2 md:p-3">
                 <svg
-                  className="w-8 h-8 text-blue-600"
+                  className="w-6 h-6 md:w-8 md:h-8 text-blue-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -137,18 +137,18 @@ function Dashboard() {
           {/* Completed */}
           <Link
             to={isManager ? "/team-progress" : "/my-progress"}
-            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-green-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Selesai</p>
-                <p className="text-3xl font-bold text-green-600">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="mb-2 md:mb-0">
+                <p className="text-xs md:text-sm font-medium text-gray-500">Selesai</p>
+                <p className="text-2xl md:text-3xl font-bold text-green-600">
                   {stats.completed}
                 </p>
               </div>
-              <div className="bg-green-100 rounded-full p-3">
+              <div className="bg-green-100 rounded-full p-2 md:p-3">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-6 h-6 md:w-8 md:h-8 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -167,20 +167,20 @@ function Dashboard() {
           {/* In Progress */}
           <Link
             to={isManager ? "/team-progress" : "/my-progress"}
-            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-yellow-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="mb-2 md:mb-0">
+                <p className="text-xs md:text-sm font-medium text-gray-500">
                   Dalam Progress
                 </p>
-                <p className="text-3xl font-bold text-yellow-600">
+                <p className="text-2xl md:text-3xl font-bold text-yellow-600">
                   {stats.in_progress}
                 </p>
               </div>
-              <div className="bg-yellow-100 rounded-full p-3">
+              <div className="bg-yellow-100 rounded-full p-2 md:p-3">
                 <svg
-                  className="w-8 h-8 text-yellow-600"
+                  className="w-6 h-6 md:w-8 md:h-8 text-yellow-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -199,18 +199,18 @@ function Dashboard() {
           {/* Pending */}
           <Link
             to={isManager ? "/work-targets" : "/my-tasks"}
-            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-gray-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-gray-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Pending</p>
-                <p className="text-3xl font-bold text-gray-600">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="mb-2 md:mb-0">
+                <p className="text-xs md:text-sm font-medium text-gray-500">Pending</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-600">
                   {stats.pending}
                 </p>
               </div>
-              <div className="bg-gray-100 rounded-full p-3">
+              <div className="bg-gray-100 rounded-full p-2 md:p-3">
                 <svg
-                  className="w-8 h-8 text-gray-600"
+                  className="w-6 h-6 md:w-8 md:h-8 text-gray-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -229,18 +229,18 @@ function Dashboard() {
           {/* Overdue */}
           <Link
             to={isManager ? "/team-progress" : "/my-progress"}
-            className="bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+            className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-red-500 hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Terlambat</p>
-                <p className="text-3xl font-bold text-red-600">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="mb-2 md:mb-0">
+                <p className="text-xs md:text-sm font-medium text-gray-500">Terlambat</p>
+                <p className="text-2xl md:text-3xl font-bold text-red-600">
                   {stats.overdue}
                 </p>
               </div>
-              <div className="bg-red-100 rounded-full p-3">
+              <div className="bg-red-100 rounded-full p-2 md:p-3">
                 <svg
-                  className="w-8 h-8 text-red-600"
+                  className="w-6 h-6 md:w-8 md:h-8 text-red-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

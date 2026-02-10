@@ -214,12 +214,12 @@ function Users() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-lg shadow p-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-[#001f3f] rounded-md p-3">
+            <div className="flex-shrink-0 bg-[#001f3f] rounded-md p-2 md:p-3">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 h-5 md:w-6 md:h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -232,18 +232,18 @@ function Users() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+            <div className="ml-2 md:ml-4">
+              <p className="text-xs md:text-sm font-medium text-gray-500">Total Users</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-purple-600 rounded-md p-3">
+            <div className="flex-shrink-0 bg-purple-600 rounded-md p-2 md:p-3">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 h-5 md:w-6 md:h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -256,18 +256,18 @@ function Users() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">CEO</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.ceo}</p>
+            <div className="ml-2 md:ml-4">
+              <p className="text-xs md:text-sm font-medium text-gray-500">CEO</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.ceo}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-blue-600 rounded-md p-3">
+            <div className="flex-shrink-0 bg-blue-600 rounded-md p-2 md:p-3">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 h-5 md:w-6 md:h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -280,20 +280,20 @@ function Users() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Manager</p>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="ml-2 md:ml-4">
+              <p className="text-xs md:text-sm font-medium text-gray-500">Manager</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">
                 {stats.manager}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-green-600 rounded-md p-3">
+            <div className="flex-shrink-0 bg-green-600 rounded-md p-2 md:p-3">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 h-5 md:w-6 md:h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -306,20 +306,20 @@ function Users() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Karyawan</p>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="ml-2 md:ml-4">
+              <p className="text-xs md:text-sm font-medium text-gray-500">Karyawan</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">
                 {stats.karyawan}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-red-600 rounded-md p-3">
+            <div className="flex-shrink-0 bg-red-600 rounded-md p-2 md:p-3">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 h-5 md:w-6 md:h-6 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -332,9 +332,9 @@ function Users() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Admin</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.admin}</p>
+            <div className="ml-2 md:ml-4">
+              <p className="text-xs md:text-sm font-medium text-gray-500">Admin</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.admin}</p>
             </div>
           </div>
         </div>
@@ -343,7 +343,7 @@ function Users() {
       {/* Table Section */}
       <div className="bg-white rounded-lg shadow">
         {/* Search & Filter */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 md:px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Search */}
             <div className="flex-1 max-w-md">
@@ -389,10 +389,10 @@ function Users() {
                   });
                   setShowModal(true);
                 }}
-                className="px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition flex items-center whitespace-nowrap"
+                className="px-3 md:px-4 py-2 bg-[#001f3f] text-white rounded-lg hover:bg-[#003366] transition flex items-center whitespace-nowrap text-sm"
               >
                 <svg
-                  className="w-5 h-5 mr-2"
+                  className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -635,6 +635,8 @@ function Users() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
+                  placeholder="Masukkan email pengguna"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -715,9 +717,16 @@ function Users() {
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
                   required
+                  disabled={!formData.department && (formData.role === "manager" || formData.role === "karyawan")}
                 >
-                  <option value="">Pilih Job Description</option>
-                  {formData.department === "it" &&
+                  <option value="">
+                    {!formData.department && (formData.role === "manager" || formData.role === "karyawan")
+                      ? "Pilih Department terlebih dahulu"
+                      : "Pilih Job Description"}
+                  </option>
+                  
+                  {/* Show IT departments if role is manager/karyawan with IT dept */}
+                  {formData.department === "it" && (formData.role === "manager" || formData.role === "karyawan") &&
                     departments
                       .filter((d) => d.type === "it")
                       .map((dept) => (
@@ -726,7 +735,9 @@ function Users() {
                           {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
-                  {formData.department === "operasional" &&
+                  
+                  {/* Show Operasional departments if role is manager/karyawan with Operasional dept */}
+                  {formData.department === "operasional" && (formData.role === "manager" || formData.role === "karyawan") &&
                     departments
                       .filter((d) => d.type === "operasional")
                       .map((dept) => (
@@ -735,7 +746,34 @@ function Users() {
                           {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
+                  
+                  {/* Show Admin job description for admin role */}
+                  {formData.role === "admin" &&
+                    departments
+                      .filter((d) => d.type === "admin")
+                      .map((dept) => (
+                        <option key={dept.id} value={dept.name}>
+                          {dept.name}{" "}
+                          {dept.description && `- ${dept.description}`}
+                        </option>
+                      ))}
+                  
+                  {/* Show CEO job description for ceo role */}
+                  {formData.role === "ceo" &&
+                    departments
+                      .filter((d) => d.type === "ceo")
+                      .map((dept) => (
+                        <option key={dept.id} value={dept.name}>
+                          {dept.name}{" "}
+                          {dept.description && `- ${dept.description}`}
+                        </option>
+                      ))}
                 </select>
+                {!formData.department && (formData.role === "manager" || formData.role === "karyawan") && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Silakan pilih Department terlebih dahulu untuk melihat opsi Job Description
+                  </p>
+                )}
               </div>
               {formData.role === "karyawan" && (
                 <div>

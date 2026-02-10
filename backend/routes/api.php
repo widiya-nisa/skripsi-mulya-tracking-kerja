@@ -23,10 +23,12 @@ use App\Http\Controllers\Api\LeaveController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ChatGroupController;
+use App\Http\Controllers\Api\PasswordResetRequestController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/password-reset/request', [PasswordResetRequestController::class, 'submitRequest']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -38,6 +40,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::get('/users/stats', [UserController::class, 'stats']);
         Route::apiResource('departments', DepartmentController::class);
+        
+        // Password Reset Requests Management (Admin only)
+        Route::get('/password-reset/requests', [PasswordResetRequestController::class, 'index']);
+        Route::get('/password-reset/requests/statistics', [PasswordResetRequestController::class, 'statistics']);
+        Route::get('/password-reset/requests/{id}', [PasswordResetRequestController::class, 'show']);
+        Route::post('/password-reset/requests/{id}/approve', [PasswordResetRequestController::class, 'approve']);
+        Route::post('/password-reset/requests/{id}/reject', [PasswordResetRequestController::class, 'reject']);
+        Route::delete('/password-reset/requests/{id}', [PasswordResetRequestController::class, 'destroy']);
     });
 
     // Users - Admin, CEO, dan Manager bisa akses (untuk buat grup chat)

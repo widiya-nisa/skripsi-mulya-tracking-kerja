@@ -230,7 +230,7 @@ function Register() {
 
         {/* Footer */}
         <p className="text-center text-white text-sm mt-6 opacity-90">
-          © 2026 PT Digimall - UMKM Marketplace Management
+          © 2026 PT Digimall - Tracking Kerja Management
         </p>
       </div>
     </div>

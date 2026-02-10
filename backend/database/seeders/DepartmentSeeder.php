@@ -86,6 +86,18 @@ class DepartmentSeeder extends Seeder
                 'description' => 'Human Resource dan rekrutmen',
                 'type' => 'operasional',
             ],
+
+            // Management/Leadership Departments
+            [
+                'name' => 'System Administrator',
+                'description' => 'Mengelola sistem, user, dan hak akses aplikasi',
+                'type' => 'admin',
+            ],
+            [
+                'name' => 'CEO / Direktur',
+                'description' => 'Memimpin perusahaan dan membuat keputusan strategis',
+                'type' => 'ceo',
+            ],
         ];
 
         foreach ($departments as $dept) {

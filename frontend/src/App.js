@@ -26,6 +26,7 @@ import ActivityLog from "./pages/ActivityLog";
 import Departments from "./pages/Departments";
 import Chat from "./pages/Chat";
 import ChatGroups from "./pages/ChatGroups";
+import PasswordResetRequests from "./pages/PasswordResetRequests";
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -189,6 +190,16 @@ function App() {
             <AdminRoute>
               <Layout>
                 <Settings />
+              </Layout>
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/password-reset-requests"
+          element={
+            <AdminRoute>
+              <Layout>
+                <PasswordResetRequests />
               </Layout>
             </AdminRoute>
           }

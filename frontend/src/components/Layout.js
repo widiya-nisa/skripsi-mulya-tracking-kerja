@@ -8,6 +8,7 @@ function Layout({ children }) {
   const location = useLocation();
   const user = authService.getCurrentUser();
   const [logo, setLogo] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Fetch logo from localStorage or API
@@ -28,8 +29,20 @@ function Layout({ children }) {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* Sidebar Navy */}
-      <aside className="w-64 bg-gradient-to-b from-[#001f3f] to-[#003366] text-white flex flex-col shadow-xl">
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#001f3f] to-[#003366] text-white flex flex-col shadow-xl transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
+      >
         {/* Logo */}
         <div className="p-6 border-b border-blue-800">
           <div className="flex items-center space-x-3">
@@ -646,6 +659,30 @@ function Layout({ children }) {
               </Link>
 
               <Link
+                to="/password-reset-requests"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  isActive("/password-reset-requests")
+                    ? "bg-white text-[#001f3f] font-medium shadow-md"
+                    : "text-blue-100 hover:bg-white hover:bg-opacity-10"
+                }`}
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                  />
+                </svg>
+                Reset Password
+              </Link>
+
+              <Link
                 to="/chat"
                 className={`flex items-center px-4 py-3 rounded-lg transition ${
                   isActive("/chat")
@@ -812,9 +849,28 @@ function Layout({ children }) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header - White */}
-        <header className="bg-white shadow-sm px-6 py-4 border-b">
+        <header className="bg-white shadow-sm px-4 md:px-6 py-4 border-b">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-[#001f3f]">
+            {/* Hamburger Menu for Mobile */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 text-[#001f3f]"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+            <h2 className="text-xl md:text-2xl font-bold text-[#001f3f]">
               {location.pathname === "/dashboard" && "Dashboard"}
               {location.pathname === "/work-targets" && "Target Tim"}
               {location.pathname === "/team-progress" && "Laporan Tim"}
@@ -827,16 +883,17 @@ function Layout({ children }) {
                 "Detail Karyawan"}
               {location.pathname === "/users" && "User Management"}
               {location.pathname === "/settings" && "Pengaturan Sistem"}
+              {location.pathname === "/password-reset-requests" && "Reset Password Requests"}
               {location.pathname === "/chat" && "Team Chat"}
               {location.pathname === "/chat-groups" && "Grup Chat"}
               {location.pathname === "/notifications" && "Semua Notifikasi"}
             </h2>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               {/* Notification Bell */}
               <NotificationBell />
 
-              {/* Date */}
-              <div className="text-sm text-gray-600">
+              {/* Date - Hidden on mobile */}
+              <div className="hidden md:block text-sm text-gray-600">
                 {new Date().toLocaleDateString("id-ID", {
                   weekday: "long",
                   year: "numeric",
@@ -849,7 +906,7 @@ function Layout({ children }) {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
           {children}
         </main>
       </div>

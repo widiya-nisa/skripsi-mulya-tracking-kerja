@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // Frontend Developer, Backend Developer, Mobile Developer, etc
             $table->text('description')->nullable(); // Deskripsi pekerjaan
-            $table->enum('type', ['it', 'operasional'])->default('operasional'); // Tipe department
+            $table->enum('type', ['it', 'operasional', 'admin', 'ceo'])->default('operasional'); // Tipe department
             $table->timestamps();
         });
     }
