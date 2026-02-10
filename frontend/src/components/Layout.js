@@ -835,7 +835,8 @@ function Layout({ children }) {
                 "Detail Karyawan"}
               {location.pathname === "/users" && "User Management"}
               {location.pathname === "/settings" && "Pengaturan Sistem"}
-              {location.pathname === "/password-reset-requests" && "Reset Password Requests"}
+              {location.pathname === "/password-reset-requests" &&
+                "Reset Password Requests"}
               {location.pathname === "/chat" && "Team Chat"}
               {location.pathname === "/chat-groups" && "Grup Chat"}
               {location.pathname === "/notifications" && "Semua Notifikasi"}

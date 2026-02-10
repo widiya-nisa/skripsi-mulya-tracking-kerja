@@ -68,7 +68,7 @@ function PasswordResetRequests() {
       if (modalType === "approve") {
         await api.post(
           `/password-reset/requests/${selectedRequest.id}/approve`,
-          formData
+          formData,
         );
         setNotification({
           message: `Password berhasil direset! Password baru: ${formData.new_password}. Silakan kirim ke user via WhatsApp.`,
@@ -77,7 +77,7 @@ function PasswordResetRequests() {
       } else {
         await api.post(
           `/password-reset/requests/${selectedRequest.id}/reject`,
-          { admin_notes: formData.admin_notes }
+          { admin_notes: formData.admin_notes },
         );
         setNotification({
           message: "Request berhasil ditolak",
@@ -313,7 +313,10 @@ function PasswordResetRequests() {
             <tbody className="bg-white divide-y divide-gray-200">
               {requests.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan="6"
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     Tidak ada request
                   </td>
                 </tr>
@@ -329,13 +332,16 @@ function PasswordResetRequests() {
                       {request.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {new Date(request.created_at).toLocaleDateString("id-ID", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(request.created_at).toLocaleDateString(
+                        "id-ID",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -437,7 +443,10 @@ function PasswordResetRequests() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Catatan Admin {modalType === "reject" && <span className="text-red-500">*</span>}
+                  Catatan Admin{" "}
+                  {modalType === "reject" && (
+                    <span className="text-red-500">*</span>
+                  )}
                 </label>
                 <textarea
                   value={formData.admin_notes}

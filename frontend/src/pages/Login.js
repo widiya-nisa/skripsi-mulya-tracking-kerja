@@ -54,13 +54,16 @@ function Login() {
     setResetLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/password-reset/request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/password-reset/request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: resetEmail }),
         },
-        body: JSON.stringify({ email: resetEmail }),
-      });
+      );
 
       const data = await response.json();
 
@@ -314,8 +317,9 @@ function Login() {
                   Request Terkirim!
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Permintaan reset password Anda telah terkirim ke admin. Admin akan
-                  segera memproses dan mengirimkan password baru melalui WhatsApp.
+                  Permintaan reset password Anda telah terkirim ke admin. Admin
+                  akan segera memproses dan mengirimkan password baru melalui
+                  WhatsApp.
                 </p>
                 <button
                   onClick={() => {
@@ -360,7 +364,8 @@ function Login() {
 
                 <p className="text-gray-600 mb-6">
                   Masukkan email Anda yang terdaftar. Admin akan memproses
-                  permintaan Anda dan mengirimkan password baru melalui WhatsApp.
+                  permintaan Anda dan mengirimkan password baru melalui
+                  WhatsApp.
                 </p>
 
                 {resetError && (

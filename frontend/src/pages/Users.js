@@ -233,8 +233,12 @@ function Users() {
               </svg>
             </div>
             <div className="ml-2 md:ml-4">
-              <p className="text-xs md:text-sm font-medium text-gray-500">Total Users</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-500">
+                Total Users
+              </p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">
+                {stats.total}
+              </p>
             </div>
           </div>
         </div>
@@ -257,8 +261,12 @@ function Users() {
               </svg>
             </div>
             <div className="ml-2 md:ml-4">
-              <p className="text-xs md:text-sm font-medium text-gray-500">CEO</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.ceo}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-500">
+                CEO
+              </p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">
+                {stats.ceo}
+              </p>
             </div>
           </div>
         </div>
@@ -281,7 +289,9 @@ function Users() {
               </svg>
             </div>
             <div className="ml-2 md:ml-4">
-              <p className="text-xs md:text-sm font-medium text-gray-500">Manager</p>
+              <p className="text-xs md:text-sm font-medium text-gray-500">
+                Manager
+              </p>
               <p className="text-lg md:text-2xl font-bold text-gray-900">
                 {stats.manager}
               </p>
@@ -307,7 +317,9 @@ function Users() {
               </svg>
             </div>
             <div className="ml-2 md:ml-4">
-              <p className="text-xs md:text-sm font-medium text-gray-500">Karyawan</p>
+              <p className="text-xs md:text-sm font-medium text-gray-500">
+                Karyawan
+              </p>
               <p className="text-lg md:text-2xl font-bold text-gray-900">
                 {stats.karyawan}
               </p>
@@ -333,8 +345,12 @@ function Users() {
               </svg>
             </div>
             <div className="ml-2 md:ml-4">
-              <p className="text-xs md:text-sm font-medium text-gray-500">Admin</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.admin}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-500">
+                Admin
+              </p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900">
+                {stats.admin}
+              </p>
             </div>
           </div>
         </div>
@@ -717,16 +733,24 @@ function Users() {
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001f3f] focus:border-transparent"
                   required
-                  disabled={!formData.department && (formData.role === "manager" || formData.role === "karyawan")}
+                  disabled={
+                    !formData.department &&
+                    (formData.role === "manager" ||
+                      formData.role === "karyawan")
+                  }
                 >
                   <option value="">
-                    {!formData.department && (formData.role === "manager" || formData.role === "karyawan")
+                    {!formData.department &&
+                    (formData.role === "manager" ||
+                      formData.role === "karyawan")
                       ? "Pilih Department terlebih dahulu"
                       : "Pilih Job Description"}
                   </option>
-                  
+
                   {/* Show IT departments if role is manager/karyawan with IT dept */}
-                  {formData.department === "it" && (formData.role === "manager" || formData.role === "karyawan") &&
+                  {formData.department === "it" &&
+                    (formData.role === "manager" ||
+                      formData.role === "karyawan") &&
                     departments
                       .filter((d) => d.type === "it")
                       .map((dept) => (
@@ -735,9 +759,11 @@ function Users() {
                           {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
-                  
+
                   {/* Show Operasional departments if role is manager/karyawan with Operasional dept */}
-                  {formData.department === "operasional" && (formData.role === "manager" || formData.role === "karyawan") &&
+                  {formData.department === "operasional" &&
+                    (formData.role === "manager" ||
+                      formData.role === "karyawan") &&
                     departments
                       .filter((d) => d.type === "operasional")
                       .map((dept) => (
@@ -746,7 +772,7 @@ function Users() {
                           {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
-                  
+
                   {/* Show Admin job description for admin role */}
                   {formData.role === "admin" &&
                     departments
@@ -757,7 +783,7 @@ function Users() {
                           {dept.description && `- ${dept.description}`}
                         </option>
                       ))}
-                  
+
                   {/* Show CEO job description for ceo role */}
                   {formData.role === "ceo" &&
                     departments
@@ -769,11 +795,14 @@ function Users() {
                         </option>
                       ))}
                 </select>
-                {!formData.department && (formData.role === "manager" || formData.role === "karyawan") && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Silakan pilih Department terlebih dahulu untuk melihat opsi Job Description
-                  </p>
-                )}
+                {!formData.department &&
+                  (formData.role === "manager" ||
+                    formData.role === "karyawan") && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Silakan pilih Department terlebih dahulu untuk melihat
+                      opsi Job Description
+                    </p>
+                  )}
               </div>
               {formData.role === "karyawan" && (
                 <div>

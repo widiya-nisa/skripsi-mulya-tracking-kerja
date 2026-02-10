@@ -80,6 +80,32 @@ function EmployeeProfile() {
       setProfile(data);
 
       if (data) {
+        // Set preview URLs for existing files
+        if (data.photo) {
+          setPreviewUrls((prev) => ({
+            ...prev,
+            photo: `/storage/${data.photo}`,
+          }));
+        }
+        if (data.ktp_file) {
+          setPreviewUrls((prev) => ({
+            ...prev,
+            ktp_file: `/storage/${data.ktp_file}`,
+          }));
+        }
+        if (data.ijazah_file) {
+          setPreviewUrls((prev) => ({
+            ...prev,
+            ijazah_file: `/storage/${data.ijazah_file}`,
+          }));
+        }
+        if (data.cv_file) {
+          setPreviewUrls((prev) => ({
+            ...prev,
+            cv_file: `/storage/${data.cv_file}`,
+          }));
+        }
+
         setFormData({
           nik: data.nik || "",
           full_name: data.full_name || "",
@@ -222,10 +248,20 @@ function EmployeeProfile() {
       fetchProfile();
     } catch (error) {
       console.error("Error saving profile:", error);
-      showNotification(
-        error.response?.data?.message || "Gagal menyimpan profil",
-        "error",
-      );
+      console.error("Error response:", error.response?.data);
+
+      let errorMessage = "Gagal menyimpan profil";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.errors) {
+        // Handle validation errors
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0];
+        errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+      }
+
+      showNotification(errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -323,13 +359,13 @@ function EmployeeProfile() {
                     alt="Profile"
                     className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                     onError={(e) => {
-                      e.target.style.display = 'none';
+                      e.target.style.display = "none";
                     }}
                   />
                 ) : (
                   <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
                     <span className="text-4xl text-gray-500">
-                      {formData.full_name?.charAt(0) || '?'}
+                      {formData.full_name?.charAt(0) || "?"}
                     </span>
                   </div>
                 )}
@@ -823,7 +859,12 @@ function EmployeeProfile() {
                       className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect fill="%23ddd" width="128" height="128"/><text x="50%" y="50%" font-size="48" text-anchor="middle" dy=".3em" fill="%23999">' + (profile.full_name?.charAt(0) || currentUser?.name?.charAt(0) || '?') + '</text></svg>';
+                        e.target.src =
+                          'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect fill="%23ddd" width="128" height="128"/><text x="50%" y="50%" font-size="48" text-anchor="middle" dy=".3em" fill="%23999">' +
+                          (profile.full_name?.charAt(0) ||
+                            currentUser?.name?.charAt(0) ||
+                            "?") +
+                          "</text></svg>";
                       }}
                     />
                   ) : (

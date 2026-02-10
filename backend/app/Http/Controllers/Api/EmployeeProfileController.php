@@ -103,9 +103,13 @@ class EmployeeProfileController extends Controller
         // Get target user ID from request, default to current user
         $targetUserId = $request->input('user_id', $user->id);
         
+        // Get existing profile to check NIK
+        $existingProfile = EmployeeProfile::where('user_id', $targetUserId)->first();
+        $ignoreNikId = $existingProfile ? $existingProfile->id : null;
+        
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
-            'nik' => 'nullable|string|max:20|unique:employee_profiles,nik,' . $user->id . ',user_id',
+            'nik' => 'nullable|string|max:20|unique:employee_profiles,nik,' . $ignoreNikId,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'city' => 'nullable|string|max:100',
@@ -137,6 +141,9 @@ class EmployeeProfileController extends Controller
         ]);
 
         $profile = EmployeeProfile::firstOrNew(['user_id' => $targetUserId]);
+        
+        // Set is_verified true for new profiles or if admin is creating
+        $isNewProfile = !$profile->exists;
 
         // Handle file uploads
         if ($request->hasFile('ktp_file')) {
@@ -172,6 +179,12 @@ class EmployeeProfileController extends Controller
         }
 
         $profile->fill($validated);
+        
+        // Auto-verify if admin creates or if it's a new profile
+        if ($isNewProfile || $user->role === 'admin') {
+            $profile->is_verified = true;
+        }
+        
         $profile->save();
 
         // Log activity

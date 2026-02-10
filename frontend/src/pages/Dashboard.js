@@ -141,7 +141,9 @@ function Dashboard() {
           >
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
               <div className="mb-2 md:mb-0">
-                <p className="text-xs md:text-sm font-medium text-gray-500">Selesai</p>
+                <p className="text-xs md:text-sm font-medium text-gray-500">
+                  Selesai
+                </p>
                 <p className="text-2xl md:text-3xl font-bold text-green-600">
                   {stats.completed}
                 </p>
@@ -203,7 +205,9 @@ function Dashboard() {
           >
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
               <div className="mb-2 md:mb-0">
-                <p className="text-xs md:text-sm font-medium text-gray-500">Pending</p>
+                <p className="text-xs md:text-sm font-medium text-gray-500">
+                  Pending
+                </p>
                 <p className="text-2xl md:text-3xl font-bold text-gray-600">
                   {stats.pending}
                 </p>
@@ -233,7 +237,9 @@ function Dashboard() {
           >
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
               <div className="mb-2 md:mb-0">
-                <p className="text-xs md:text-sm font-medium text-gray-500">Terlambat</p>
+                <p className="text-xs md:text-sm font-medium text-gray-500">
+                  Terlambat
+                </p>
                 <p className="text-2xl md:text-3xl font-bold text-red-600">
                   {stats.overdue}
                 </p>

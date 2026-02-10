@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 function EmployeeManagement() {
   const [employees, setEmployees] = useState([]);
   const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState({
     show: false,
@@ -17,7 +18,13 @@ function EmployeeManagement() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
   const [formData, setFormData] = useState({
-    user_id: "",
+    // Data Akun
+    email: "",
+    password: "",
+    role: "karyawan",
+    department: "",
+    job_description: "",
+    // Data Pribadi
     full_name: "",
     nik: "",
     phone: "",
@@ -33,13 +40,15 @@ function EmployeeManagement() {
 
   const fetchData = async () => {
     try {
-      const [employeesRes, usersRes] = await Promise.all([
+      const [employeesRes, usersRes, deptsRes] = await Promise.all([
         api.get("/employee-profiles"),
         api.get("/users"),
+        api.get("/departments"),
       ]);
 
       setEmployees(employeesRes.data.data || []);
       setUsers(usersRes.data.data || usersRes.data || []);
+      setDepartments(deptsRes.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
       showNotification("Gagal memuat data", "error");
@@ -73,11 +82,40 @@ function EmployeeManagement() {
     setSubmitting(true);
 
     try {
-      await api.post("/employee-profiles", formData);
-      showNotification("Profil karyawan berhasil ditambahkan", "success");
+      // Step 1: Create user account first
+      const userData = {
+        name: formData.full_name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        department: formData.department,
+        job_description: formData.job_description,
+      };
+
+      const userResponse = await api.post("/users", userData);
+      const newUserId = userResponse.data.id || userResponse.data.user?.id;
+
+      // Step 2: Create employee profile
+      const employeeData = {
+        user_id: newUserId,
+        full_name: formData.full_name,
+        nik: formData.nik,
+        phone: formData.phone,
+        position: formData.position,
+        employment_status: formData.employment_status,
+        join_date: formData.join_date,
+      };
+
+      await api.post("/employee-profiles", employeeData);
+
+      showNotification("Karyawan dan akun berhasil ditambahkan", "success");
       setShowAddModal(false);
       setFormData({
-        user_id: "",
+        email: "",
+        password: "",
+        role: "karyawan",
+        department: "",
+        job_description: "",
         full_name: "",
         nik: "",
         phone: "",
@@ -477,124 +515,252 @@ function EmployeeManagement() {
             </div>
 
             <form onSubmit={handleAddEmployee} className="p-6 space-y-4">
-              {/* User Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pilih User <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.user_id}
-                  onChange={(e) =>
-                    setFormData({ ...formData, user_id: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">-- Pilih User --</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name} ({user.email}) - {user.role}
-                    </option>
-                  ))}
-                </select>
+              {/* Section: Data Akun */}
+              <div className="border-b pb-4 mb-4">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                  Data Akun Login
+                </h4>
+
+                {/* Email */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                    autoComplete="off"
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                    minLength={6}
+                  />
+                </div>
+
+                {/* Role */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Role <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.role}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        role: e.target.value,
+                        department: "",
+                        job_description: "",
+                      })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  >
+                    <option value="karyawan">Karyawan</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </div>
+
+                {/* Department */}
+                {formData.role === "manager" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Department <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.department}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          department: e.target.value,
+                          job_description: "",
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">-- Pilih Department --</option>
+                      <option value="it">IT</option>
+                      <option value="operasional">Operasional</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Job Description */}
+                {formData.role === "karyawan" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Department <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.department}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          department: e.target.value,
+                          job_description: "",
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">-- Pilih Department --</option>
+                      <option value="it">IT</option>
+                      <option value="operasional">Operasional</option>
+                    </select>
+                  </div>
+                )}
+
+                {formData.department && formData.role === "karyawan" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Job Description / Posisi{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.job_description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          job_description: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">-- Pilih Job Description --</option>
+                      {departments
+                        .filter((dept) => dept.type === formData.department)
+                        .map((dept) => (
+                          <option key={dept.id} value={dept.name}>
+                            {dept.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              {/* Full Name */}
+              {/* Section: Data Pribadi */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nama Lengkap <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.full_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, full_name: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                  Data Pribadi
+                </h4>
 
-              {/* NIK */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  NIK / Employee ID
-                </label>
-                <input
-                  type="text"
-                  value={formData.nik}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nik: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Full Name */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nama Lengkap <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.full_name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, full_name: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
 
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  No. Telepon
-                </label>
-                <input
-                  type="text"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* NIK */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    NIK / Employee ID
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.nik}
+                    onChange={(e) =>
+                      setFormData({ ...formData, nik: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Position */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Posisi / Jabatan
-                </label>
-                <input
-                  type="text"
-                  value={formData.position}
-                  onChange={(e) =>
-                    setFormData({ ...formData, position: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Phone */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    No. Telepon
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Employment Status */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status Kepegawaian
-                </label>
-                <select
-                  value={formData.employment_status}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      employment_status: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="permanent">Tetap</option>
-                  <option value="contract">Kontrak</option>
-                  <option value="probation">Probation</option>
-                  <option value="internship">Magang</option>
-                </select>
-              </div>
+                {/* Position */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Posisi / Jabatan
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.position}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Join Date */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tanggal Bergabung
-                </label>
-                <input
-                  type="date"
-                  value={formData.join_date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, join_date: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
+                {/* Employment Status */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Status Kepegawaian
+                  </label>
+                  <select
+                    value={formData.employment_status}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        employment_status: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="permanent">Tetap</option>
+                    <option value="contract">Kontrak</option>
+                    <option value="probation">Probation</option>
+                    <option value="internship">Magang</option>
+                  </select>
+                </div>
+
+                {/* Join Date */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tanggal Bergabung
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.join_date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, join_date: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
 
               {/* Buttons */}
