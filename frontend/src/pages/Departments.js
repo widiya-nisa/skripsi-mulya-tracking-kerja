@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import api from "../services/api";
-import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
@@ -97,15 +96,11 @@ function Departments() {
   );
 
   if (loading) {
-    return (
-      <Layout>
-        <div className="text-center py-8">Loading...</div>
-      </Layout>
-    );
+    return <div className="text-center py-8">Loading...</div>;
   }
 
   return (
-    <Layout>
+    <>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -369,7 +364,7 @@ function Departments() {
           onClose={() => hideToast(toast.id)}
         />
       ))}
-    </Layout>
+    </>
   );
 }
 
