@@ -537,10 +537,7 @@ const Chat = () => {
                                       className="block"
                                     >
                                       <img
-                                        src={`${
-                                          process.env.REACT_APP_API_URL ||
-                                          process.env.REACT_APP_API_URL || "http://localhost:8000"
-                                        }/storage/${msg.attachment}`}
+                                        src={`https://ditrackingkerja.my.id/storage/${msg.attachment}`}
                                         alt="Attachment"
                                         className="max-w-xs rounded-lg border-2 border-white shadow-md hover:shadow-lg transition cursor-pointer"
                                       />
@@ -548,10 +545,7 @@ const Chat = () => {
                                   ) : (
                                     // File download link
                                     <a
-                                      href={`${
-                                        process.env.REACT_APP_API_URL ||
-                                        process.env.REACT_APP_API_URL || "http://localhost:8000"
-                                      }/storage/${msg.attachment}`}
+                                      href={`https://ditrackingkerja.my.id/storage/${msg.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       download

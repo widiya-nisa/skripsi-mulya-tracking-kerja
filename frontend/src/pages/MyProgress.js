@@ -293,7 +293,7 @@ function MyProgress() {
                                 <div className="mt-2">
                                   {prog.attachment.endsWith(".pdf") ? (
                                     <a
-                                      href={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${prog.attachment}`}
+                                      href={`https://ditrackingkerja.my.id/storage/${prog.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="flex items-center gap-3 p-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -361,7 +361,7 @@ function MyProgress() {
                                       </button>
                                       {showImages[prog.id] && (
                                         <img
-                                          src={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${prog.attachment}`}
+                                          src={`https://ditrackingkerja.my.id/storage/${prog.attachment}`}
                                           alt="Progress attachment"
                                           className="mt-3 max-w-md rounded border"
                                         />
