@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('progress_attachments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('work_progress_id')->constrained('work_progress')->onDelete('cascade');
+            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
+            $table->string('file_name');
+            $table->string('file_path');
+            $table->string('file_type')->nullable();
+            $table->integer('file_size')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
