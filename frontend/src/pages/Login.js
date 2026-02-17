@@ -55,7 +55,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "https://ditrackingkerja.my.id/api/password-reset/request",
+        `${process.env.REACT_APP_API_URL}/api/password-reset/request`,
         {
           method: "POST",
           headers: {

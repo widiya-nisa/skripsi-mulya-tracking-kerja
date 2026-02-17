@@ -355,7 +355,7 @@ function EmployeeProfile() {
                   />
                 ) : profile?.photo ? (
                   <img
-                    src={`https://ditrackingkerja.my.id/storage/${profile.photo}`}
+                    src={`${process.env.REACT_APP_API_URL}/storage/${profile.photo}`}
                     alt="Profile"
                     className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                     onError={(e) => {
@@ -854,7 +854,7 @@ function EmployeeProfile() {
                 <div className="flex items-start space-x-6 border-b pb-6">
                   {profile.photo ? (
                     <img
-                      src={`https://ditrackingkerja.my.id/storage/${profile.photo}`}
+                      src={`${process.env.REACT_APP_API_URL}/storage/${profile.photo}`}
                       alt="Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                       onError={(e) => {

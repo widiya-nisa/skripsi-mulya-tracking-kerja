@@ -528,16 +528,13 @@ const Chat = () => {
                                   {isImageFile(msg.attachment) ? (
                                     // Image preview
                                     <a
-                                      href={`${
-                                        process.env.REACT_APP_API_URL ||
-                                        process.env.REACT_APP_API_URL || "http://localhost:8000"
-                                      }/storage/${msg.attachment}`}
+                                      href={`${process.env.REACT_APP_API_URL}/storage/${msg.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="block"
                                     >
                                       <img
-                                        src={`https://ditrackingkerja.my.id/storage/${msg.attachment}`}
+                                        src={`${process.env.REACT_APP_API_URL}/storage/${msg.attachment}`}
                                         alt="Attachment"
                                         className="max-w-xs rounded-lg border-2 border-white shadow-md hover:shadow-lg transition cursor-pointer"
                                       />
@@ -545,7 +542,7 @@ const Chat = () => {
                                   ) : (
                                     // File download link
                                     <a
-                                      href={`https://ditrackingkerja.my.id/storage/${msg.attachment}`}
+                                      href={`${process.env.REACT_APP_API_URL}/storage/${msg.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       download
