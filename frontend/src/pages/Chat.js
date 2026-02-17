@@ -530,7 +530,7 @@ const Chat = () => {
                                     <a
                                       href={`${
                                         process.env.REACT_APP_API_URL ||
-                                        "http://localhost:8000"
+                                        process.env.REACT_APP_API_URL || "http://localhost:8000"
                                       }/storage/${msg.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
@@ -539,7 +539,7 @@ const Chat = () => {
                                       <img
                                         src={`${
                                           process.env.REACT_APP_API_URL ||
-                                          "http://localhost:8000"
+                                          process.env.REACT_APP_API_URL || "http://localhost:8000"
                                         }/storage/${msg.attachment}`}
                                         alt="Attachment"
                                         className="max-w-xs rounded-lg border-2 border-white shadow-md hover:shadow-lg transition cursor-pointer"
@@ -550,7 +550,7 @@ const Chat = () => {
                                     <a
                                       href={`${
                                         process.env.REACT_APP_API_URL ||
-                                        "http://localhost:8000"
+                                        process.env.REACT_APP_API_URL || "http://localhost:8000"
                                       }/storage/${msg.attachment}`}
                                       target="_blank"
                                       rel="noopener noreferrer"

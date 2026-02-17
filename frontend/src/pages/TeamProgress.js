@@ -531,14 +531,14 @@ function TeamProgress() {
                         {/* PDF Preview with iframe */}
                         <div className="bg-white p-2">
                           <iframe
-                            src={`http://127.0.0.1:8000/storage/${selectedProgress.attachment}#toolbar=0`}
+                            src={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${selectedProgress.attachment}#toolbar=0`}
                             className="w-full h-96 border-0"
                             title="PDF Preview"
                           />
                         </div>
                         {/* PDF Download Link */}
                         <a
-                          href={`http://127.0.0.1:8000/storage/${selectedProgress.attachment}`}
+                          href={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${selectedProgress.attachment}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           download
@@ -580,7 +580,7 @@ function TeamProgress() {
                       </div>
                     ) : (
                       <img
-                        src={`http://127.0.0.1:8000/storage/${selectedProgress.attachment}`}
+                        src={`${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/${selectedProgress.attachment}`}
                         alt="Bukti Progress"
                         className="w-full h-auto"
                         onError={(e) => {

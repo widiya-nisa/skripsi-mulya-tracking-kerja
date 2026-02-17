@@ -39,7 +39,7 @@ function MyTasks() {
    * 2. Muncul popup konfirmasi custom
    * 3. User klik "Ya, Mulai Kerja"
    * 4. Function handleStartWork() dipanggil
-   * 5. POST request ke: http://127.0.0.1:8000/api/work-progress
+  * 5. POST request ke: ${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/work-progress
    * 6. Data dikirim: { work_target_id, percentage: 0, progress_note }
    * 7. Backend (WorkProgressController@store) memproses:
    *    - Validasi data
